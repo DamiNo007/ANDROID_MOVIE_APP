@@ -15,7 +15,6 @@ class StoriesAdapter(
     var list: ArrayList<Story>
 ) : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
 
-
     private var mContext: Context? = null
     private var thisList = list
 

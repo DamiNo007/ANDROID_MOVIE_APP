@@ -25,13 +25,9 @@ public class FirstFragment : Fragment(),
     MovieAdapter.RecyclerViewItemClick {
 
     private lateinit var recyclerView: RecyclerView
-
     private lateinit var storiesRecyclerView: RecyclerView
-
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-
     private var movieAdapter: MovieAdapter? = null
-
     private var storiesAdapter: StoriesAdapter?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {

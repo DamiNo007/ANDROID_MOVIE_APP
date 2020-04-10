@@ -24,15 +24,10 @@ import retrofit2.Response
 class RegisterFragment: Fragment() {
 
     lateinit var editfirstName:EditText
-
     lateinit var editlastName:EditText
-
     lateinit var editLogin:EditText
-
     lateinit var editPassword:EditText
-
     lateinit var confPassword:EditText
-
     lateinit var registerBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {

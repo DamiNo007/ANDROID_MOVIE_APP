@@ -22,103 +22,58 @@ import java.lang.reflect.Type
 class MovieDetailActivity:AppCompatActivity(){
 
     private lateinit var progressBar:ProgressBar
-
     private lateinit var tvTime: TextView
-
     private lateinit var tvRating: TextView
-
     private lateinit var tvPopularity:TextView
-
     private lateinit var tvAdult:TextView
-
     private lateinit var tvDate:TextView
-
     private lateinit var imgMovie: ImageView
-
     private lateinit var tvTitle: TextView
-
     private lateinit var tvTitleMini: TextView
-
     private lateinit var tvDescription:TextView
-
     private lateinit var tvFullHD:TextView
-
     private lateinit var tvAge:TextView
-
     private lateinit var playImg:ImageView
-
     private lateinit var trailerImg:ImageButton
-
     private lateinit var downloadImg:ImageButton
-
     private lateinit var shareImg:ImageButton
-
     private lateinit var favImg: ImageButton
-
     private lateinit var tvDateContent:TextView
-
     private lateinit var tvAdultContent:TextView
-
     private lateinit var tvRatingContent:TextView
-
     private lateinit var tvPopularityContent:TextView
-
     private lateinit var tvTimeContent:TextView
-
     private var isFavorite = false
-
-    val baseImageUrl:String = "https://image.tmdb.org/t/p/w500"
+    private val baseImageUrl:String = "https://image.tmdb.org/t/p/w500"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
 
         progressBar = findViewById(R.id.progressBar)
-
         tvDescription = findViewById(R.id.tvDescription)
-
         tvTitle = findViewById(R.id.tvTitle)
-
         tvTitleMini = findViewById(R.id.tvTitleMini)
-
         imgMovie = findViewById(R.id.imgMovie)
-
         tvDate = findViewById(R.id.date)
-
         tvAdult = findViewById(R.id.adult)
-
         tvRating = findViewById(R.id.rating)
-
         tvPopularity =findViewById(R.id.popularity)
-
         tvTime = findViewById(R.id.time)
-
         tvDateContent = findViewById(R.id.releaseDate)
-
         tvAdultContent = findViewById(R.id.isAdult)
-
         tvRatingContent = findViewById(R.id.ratingContent)
-
         tvPopularityContent = findViewById(R.id.popularityContent)
-
         tvTimeContent = findViewById(R.id.timeContent)
-
         playImg = findViewById(R.id.playImg)
-
         favImg = findViewById(R.id.imgFav)
-
         downloadImg = findViewById(R.id.imgDownload)
-
         shareImg = findViewById(R.id.imgShare)
-
         trailerImg = findViewById(R.id.imgTrailer)
-
         tvFullHD = findViewById(R.id.tvFullHD)
-
         tvAge = findViewById(R.id.tvAge)
 
         val movieId = intent.getIntExtra("movie_id", 1)
-
         getMovie(id = movieId)
     }
 

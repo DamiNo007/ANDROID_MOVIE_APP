@@ -18,20 +18,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class LogRegActivity: AppCompatActivity() {
+
     private var registerFragment: Fragment =
         RegisterFragment()
-
     private var loginFragment: Fragment =
         LoginFragment()
-
     private var fragmentList: MutableList<Fragment> = ArrayList()
-
     private var fragmentManager: FragmentManager? = null
-
     private var transaction: FragmentTransaction? = null
-
     private lateinit var pager: CustomViewPager
-
     private var pagerAdapter: PagerAdapter? = null
 
     private val navListener: BottomNavigationView.OnNavigationItemSelectedListener =

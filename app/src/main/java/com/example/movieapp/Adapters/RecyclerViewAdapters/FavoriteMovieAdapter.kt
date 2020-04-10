@@ -22,7 +22,6 @@ class FavoriteMovieAdapter(
 ) : RecyclerView.Adapter<FavoriteMovieAdapter.FavoriteMovieViewHolder>() {
 
     private var mContext: Context? = null
-
     private val baseImageUrl:String = "https://image.tmdb.org/t/p/w500"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteMovieViewHolder {

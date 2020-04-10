@@ -19,21 +19,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainPageActivity: AppCompatActivity(){
 
     private var firstFragment: Fragment = FirstFragment()
-
     private var secondFragment: Fragment =
         SecondFragment()
-
     private var thirdFragment: Fragment =
         ThirdFragment()
-
     private var fragmentList: MutableList<Fragment> = ArrayList()
-
     private var fragmentManager: FragmentManager?=null
-
     private var transaction : FragmentTransaction?=null
-
     private lateinit var pager: CustomViewPager
-
     private var pagerAdapter: PagerAdapter?=null
 
     private val navListener: BottomNavigationView.OnNavigationItemSelectedListener =

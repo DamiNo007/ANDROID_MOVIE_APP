@@ -37,11 +37,8 @@ class LoginFragment: Fragment() {
     }
 
     private lateinit var loginBtn: Button
-
     private lateinit var login: EditText
-
     private lateinit var password:EditText
-
     private lateinit var progressBar:ProgressBar
 
     override fun onCreateView(

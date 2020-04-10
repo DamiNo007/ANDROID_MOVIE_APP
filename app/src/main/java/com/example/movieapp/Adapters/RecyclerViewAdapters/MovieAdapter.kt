@@ -21,7 +21,6 @@ class MovieAdapter(
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     private var mContext: Context? = null
-
     private val baseImageUrl:String = "https://image.tmdb.org/t/p/w500"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -78,7 +77,6 @@ class MovieAdapter(
         (list as? ArrayList<Movie>)?.clear()
         notifyDataSetChanged()
     }
-
 
     inner class MovieViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         val imgMovie: ImageView = itemView.findViewById(R.id.imgMovie)

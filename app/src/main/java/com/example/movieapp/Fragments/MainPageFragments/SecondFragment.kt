@@ -26,9 +26,7 @@ class SecondFragment: Fragment(),
     FavoriteMovieAdapter.RecyclerViewItemClick {
 
     private lateinit var recyclerView: RecyclerView
-
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-
     private var favMovieAdapter: FavoriteMovieAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

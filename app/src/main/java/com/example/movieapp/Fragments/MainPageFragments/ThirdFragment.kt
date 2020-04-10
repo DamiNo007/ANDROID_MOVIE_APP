@@ -28,9 +28,7 @@ import java.lang.reflect.Type
 class ThirdFragment:Fragment(){
 
     private lateinit var userName:TextView
-
     private lateinit var userFullName:TextView
-
     private lateinit var logOutBtn:Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
