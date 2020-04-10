@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="90dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/storyImgCirc"
+        android:layout_width="72dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:src="@drawable/circle_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/image7" />
+
+    <com.github.abdularis.civ.AvatarImageView
+        android:id="@+id/imgStory"
+        android:layout_width="61dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/a5"
+        app:highlightEnable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeWidth="2dp"
+        app:view_state="IMAGE" />
+
+    <TextView
+        android:id="@+id/storyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HELLO"
+        android:textSize="10sp"
+        android:textColor= "#95a39c"
+        app:layout_constraintEnd_toEndOf="@+id/storyImgCirc"
+        app:layout_constraintStart_toStartOf="@+id/storyImgCirc"
+        app:layout_constraintTop_toBottomOf="@id/imgStory" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
