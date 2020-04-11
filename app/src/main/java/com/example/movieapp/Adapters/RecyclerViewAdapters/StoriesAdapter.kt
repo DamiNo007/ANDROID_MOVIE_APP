@@ -39,7 +39,7 @@ class StoriesAdapter(
         holder.storyTitle.setText(mStory.title)
     }
 
-    inner class StoryViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+    inner class StoryViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val imgStory: ImageView = itemView.findViewById(R.id.imgStory)
         val storyTitle: TextView = itemView.findViewById(R.id.storyTitle)
     }

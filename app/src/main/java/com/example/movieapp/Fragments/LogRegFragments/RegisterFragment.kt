@@ -23,11 +23,11 @@ import retrofit2.Response
 //REGISTERFRAGMENT
 class RegisterFragment: Fragment() {
 
-    lateinit var editfirstName:EditText
-    lateinit var editlastName:EditText
-    lateinit var editLogin:EditText
-    lateinit var editPassword:EditText
-    lateinit var confPassword:EditText
+    lateinit var editfirstName: EditText
+    lateinit var editlastName: EditText
+    lateinit var editLogin: EditText
+    lateinit var editPassword: EditText
+    lateinit var confPassword: EditText
     lateinit var registerBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,7 @@ class RegisterFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view:View = inflater!!.inflate(R.layout.registration,container,false)
+        var view: View = inflater!!.inflate(R.layout.registration,container,false)
         editfirstName = view.findViewById(R.id.name)
         editlastName = view.findViewById(R.id.surname)
         editLogin = view.findViewById(R.id.login)
@@ -48,18 +48,18 @@ class RegisterFragment: Fragment() {
         registerBtn = view.findViewById(R.id.registerBtn)
         registerBtn.setOnClickListener(){
             if(editfirstName.text.length>0 && editlastName.text.length>0 && editLogin.text.length>0 && editPassword.text.length>0 ){
-                var name:String= editfirstName.text.toString()
-                var surname:String=editlastName.text.toString()
-                var login:String = editLogin.text.toString()
-                var password:String=editPassword.text.toString()
-                var confpassword:String = confPassword.text.toString()
+                var name: String= editfirstName.text.toString()
+                var surname: String=editlastName.text.toString()
+                var login: String = editLogin.text.toString()
+                var password: String=editPassword.text.toString()
+                var confpassword: String = confPassword.text.toString()
 
-                if(editPassword.text.toString().equals(confPassword.text.toString())) {
+                if (editPassword.text.toString().equals(confPassword.text.toString())) {
                     getNewToken()
                 } else
                     Toast.makeText(this.context, "Пароли не совпадают!", Toast.LENGTH_SHORT).show()
             }
-            else{
+            else {
                 val text = "Заполните все поля!"
                 val duration = Toast.LENGTH_SHORT
                 Toast.makeText(this.context, text, duration).show()
@@ -82,7 +82,7 @@ class RegisterFragment: Fragment() {
                 if (response.isSuccessful) {
                     val token= gson.fromJson(response.body(), Token::class.java)
 
-                    if(token!=null){
+                    if (token != null) {
                         createNewUser(token)
                     }
                 }
@@ -91,11 +91,11 @@ class RegisterFragment: Fragment() {
     }
 
     fun createNewUser(token: Token){
-         var newUser= User()
-         var name:String= editfirstName.text.toString()
-         var surname:String=editlastName.text.toString()
-         var login:String = editLogin.text.toString()
-         var password:String=editPassword.text.toString()
+         var newUser = User()
+         var name: String = editfirstName.text.toString()
+         var surname: String = editlastName.text.toString()
+         var login: String = editLogin.text.toString()
+         var password: String = editPassword.text.toString()
          newUser.userToken = token
          newUser?.userFirstName = name
          newUser?.userLastName = surname

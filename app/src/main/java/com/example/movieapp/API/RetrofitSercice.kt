@@ -16,7 +16,7 @@ object RetrofitService{
     private const val BASE_URL = "https://api.themoviedb.org/3/"
     private const val API_KEY = "87ff9b092f9a54d2d746be621c2f01d5"
 
-    fun getApiKey():String{
+    fun getApiKey(): String{
         return API_KEY
     }
 
@@ -55,13 +55,13 @@ interface MovieApi {
     fun getNewToken(@Query("api_key") apiKey: String): Call<JsonObject>
 
     @POST("authentication/token/validate_with_login")
-    fun login(@Query("api_key")apiKey:String,@Body body: JsonObject): Call<JsonObject>
+    fun login(@Query("api_key")apiKey: String,@Body body: JsonObject): Call<JsonObject>
 
     @HTTP(method = "DELETE", path = "authentication/session", hasBody = true)
-    fun deleteSession(@Query("api_key")apiKey:String,@Body body: JsonObject) : Call<JsonObject>
+    fun deleteSession(@Query("api_key")apiKey: String,@Body body: JsonObject): Call<JsonObject>
 
     @POST("authentication/session/new")
-    fun getSession(@Query("api_key")apiKey:String,@Body body: JsonObject) : Call<JsonObject>
+    fun getSession(@Query("api_key")apiKey: String,@Body body: JsonObject): Call<JsonObject>
 
     @POST("account/{account_id}/favorite")
     fun markAsFavorite(@Path("account_id") id: Int?,@Query("api_key") apiKey: String?,@Query("session_id") sessionId: String, @Body body: JsonObject): Call<JsonObject>

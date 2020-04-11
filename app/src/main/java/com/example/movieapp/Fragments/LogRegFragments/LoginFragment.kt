@@ -37,8 +37,8 @@ class LoginFragment: Fragment() {
 
     private lateinit var loginBtn: Button
     private lateinit var login: EditText
-    private lateinit var password:EditText
-    private lateinit var progressBar:ProgressBar
+    private lateinit var password: EditText
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,13 +75,13 @@ class LoginFragment: Fragment() {
                 Log.d("My_token_response", response.body().toString())
                 if (response.isSuccessful) {
                     val type: Type = object : TypeToken<Token>() {}.type
-                    requestTokenResponse= gson.fromJson(response.body(), Token::class.java)
-                    if(requestTokenResponse!=null){
-                        val request_token: String? = requestTokenResponse!!.request_token
+                    requestTokenResponse = gson.fromJson(response.body(), Token::class.java)
+                    if(requestTokenResponse != null){
+                        val requestToken: String? = requestTokenResponse!!.requestToken
                         val body = JsonObject().apply{
                             addProperty("username",username)
                             addProperty("password",password)
-                            addProperty("request_token",request_token)
+                            addProperty("request_token",requestToken)
                         }
                         getLoginResponse(body)
                     }
@@ -90,8 +90,8 @@ class LoginFragment: Fragment() {
         })
     }
 
-    fun getLoginResponse(body:JsonObject){
-        var logRseponse: LoginResponse?=null
+    fun getLoginResponse(body: JsonObject){
+        var logRseponse: LoginResponse? = null
         RetrofitService.getMovieApi()
             .login(RetrofitService.getApiKey(),body).enqueue(object :
             Callback<JsonObject> {
@@ -100,11 +100,11 @@ class LoginFragment: Fragment() {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 var gson:Gson = Gson()
                 if(response.isSuccessful){
-                    logRseponse= gson.fromJson(response.body(), LoginResponse::class.java)
+                    logRseponse = gson.fromJson(response.body(), LoginResponse::class.java)
 
-                    if (logRseponse!=null){
+                    if (logRseponse != null){
                         val body = JsonObject().apply{
-                            addProperty("request_token",logRseponse!!.request_token.toString())
+                            addProperty("request_token",logRseponse!!.requestToken.toString())
                         }
                         getSession(body)
                     }
@@ -117,8 +117,8 @@ class LoginFragment: Fragment() {
         })
     }
 
-    fun getSession(body:JsonObject){
-        var session: SessionResponse?=null
+    fun getSession(body: JsonObject){
+        var session: SessionResponse? = null
         RetrofitService.getMovieApi()
             .getSession(RetrofitService.getApiKey(),body).enqueue(object :
             Callback<JsonObject> {
@@ -143,12 +143,12 @@ class LoginFragment: Fragment() {
         val currUserSharedPreference: SharedPreferences =  this.activity!!.getSharedPreferences("CURRENT_USER", Context.MODE_PRIVATE)
         var currUserEditor = currUserSharedPreference.edit()
         val gson= Gson()
-        val json:String = gson!!.toJson(CurrentUser.user)
+        val json: String = gson!!.toJson(CurrentUser.user)
         currUserEditor.putString("currentUser",json)
         currUserEditor.commit()
     }
 
-    fun getAccount(session:String?){
+    fun getAccount(session: String?){
         Toast.makeText(this.context, "Loading...", Toast.LENGTH_SHORT).show()
 
         var accountResponse: AccountResponse?=null
@@ -175,12 +175,12 @@ class LoginFragment: Fragment() {
 
     }
 
-    fun error(error:String){
+    fun error(error: String){
         progressBar.visibility = View.INVISIBLE
         Toast.makeText(this.context, error, Toast.LENGTH_SHORT).show()
     }
 
-    fun welcome(user: AccountResponse, session:String?){
+    fun welcome(user: AccountResponse, session: String?){
         progressBar.visibility = View.GONE
         CurrentUser.user = user
         CurrentUser.user!!.sessionId  = session;

@@ -38,21 +38,21 @@ class MovieAdapter(
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val mMovie = list!!.get(position)
 
-        if(mMovie.imgPath != null){
+        if (mMovie.imgPath != null) {
             Glide.with(mContext!!)
                 .load(baseImageUrl + mMovie.imgPath)
                 .into(holder.imgMovie)
         }
         var cnt:Int=0
-        if(mMovie.title != null){
+        if (mMovie.title != null) {
             holder.tvTitle.setText(mMovie.title)
         }
 
-        if(mMovie.date != null){
+        if (mMovie.date != null) {
            holder.tvDate.text = mMovie.date.toString()
         }
         var id: Int?=0
-        if(mMovie.genreIds != null){
+        if (mMovie.genreIds != null) {
             try{
                 id = mMovie.genreIds.get(0)
             }catch(e:Exception){
@@ -78,7 +78,7 @@ class MovieAdapter(
         notifyDataSetChanged()
     }
 
-    inner class MovieViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+    inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val imgMovie: ImageView = itemView.findViewById(R.id.imgMovie)
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val tvDate: TextView = itemView.findViewById(R.id.tvDate)

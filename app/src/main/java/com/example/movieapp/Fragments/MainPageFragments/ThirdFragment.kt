@@ -69,7 +69,7 @@ class ThirdFragment:Fragment(){
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
                     override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                        if(response.isSuccessful){
+                        if (response.isSuccessful) {
                             goodbye()
                         }
                     }

@@ -101,7 +101,7 @@ class SecondFragment: Fragment(),
                 call: Call<MoviesResponse>,
                 response: Response<MoviesResponse>
             ) {
-                var genres:List<MovieGenres>?=null
+                var genres: List<MovieGenres>?=null
                 Log.d("Genres", response.body().toString())
                 if (response.isSuccessful) {
                     genres = response.body()?.genres

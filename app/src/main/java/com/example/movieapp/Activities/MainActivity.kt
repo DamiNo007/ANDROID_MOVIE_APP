@@ -44,7 +44,7 @@ class MainActivity: AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
     }
 
-    fun getAccount(session:String?){
+    fun getAccount(session: String?){
         var accountResponse: AccountResponse?=null
         RetrofitService.getMovieApi()
             .getAccount(RetrofitService.getApiKey(),session!!).enqueue(object :
@@ -59,10 +59,10 @@ class MainActivity: AppCompatActivity() {
                     progressBar.visibility = View.GONE
                     val type: Type = object : TypeToken<AccountResponse>() {}.type
                     accountResponse= gson.fromJson(response.body(), AccountResponse::class.java)
-                    if(accountResponse!=null){
+                    if (accountResponse!=null) {
                         welcome(accountResponse!!,session)
                     }
-                    else{
+                    else {
                         CurrentUser.user = null
                         login()
                     }

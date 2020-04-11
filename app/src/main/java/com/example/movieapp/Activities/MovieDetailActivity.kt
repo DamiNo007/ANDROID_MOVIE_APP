@@ -44,7 +44,7 @@ class MovieDetailActivity:AppCompatActivity(){
     private lateinit var tvPopularityContent:TextView
     private lateinit var tvTimeContent:TextView
     private var isFavorite = false
-    private val baseImageUrl:String = "https://image.tmdb.org/t/p/w500"
+    private val baseImageUrl: String = "https://image.tmdb.org/t/p/w500"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +101,7 @@ class MovieDetailActivity:AppCompatActivity(){
                         tvPopularity.text = "Popularity: "
                         tvTime.text = "Time: "
                         tvFullHD.text = "Full HD"
-                        if(movie.isForAdult==true){
+                        if (movie.isForAdult==true) {
                             tvAge.text = "18+"
                         }
                         else
@@ -114,18 +114,18 @@ class MovieDetailActivity:AppCompatActivity(){
                             .load(R.drawable.trailer)
                             .into(trailerImg)
 
-                        for(fm in CurrentUser.favoritList!!){
-                            if(movie.title.equals(fm.title)){
+                        for (fm in CurrentUser.favoritList!!) {
+                            if (movie.title.equals(fm.title)) {
                                 isFavorite = true
                             }
                         }
 
-                        if(isFavorite){
+                        if (isFavorite) {
                             Glide.with(this@MovieDetailActivity)
                                 .load(R.drawable.favorites2)
                                 .into(favImg)
                         }
-                        else{
+                        else {
                             Glide.with(this@MovieDetailActivity)
                                 .load(R.drawable.favorites1)
                                 .into(favImg)
@@ -140,7 +140,7 @@ class MovieDetailActivity:AppCompatActivity(){
                             .into(shareImg)
                         tvDateContent.text = movie.date
 
-                        if(movie.isForAdult==false)
+                        if (movie.isForAdult==false)
                             tvAdultContent.text = "No"
                         else
                             tvAdultContent.text = "Yes"
@@ -148,14 +148,14 @@ class MovieDetailActivity:AppCompatActivity(){
                         tvPopularityContent.text = movie.popularity.toString()
                         tvTimeContent.text = movie.runtime.toString() + " min"
 
-                        if(movie.imgPath != null){
+                        if (movie.imgPath != null) {
                             Glide.with(this@MovieDetailActivity)
                                 .load(baseImageUrl + movie.imgPath)
                                 .into(imgMovie)
                         }
 
                         favImg.setOnClickListener(){
-                            if(isFavorite){
+                            if(isFavorite) {
                                 val body = JsonObject().apply {
                                     addProperty("media_type", "movie")
                                     addProperty("media_id", movie.movieId)
@@ -168,7 +168,7 @@ class MovieDetailActivity:AppCompatActivity(){
 
                                 markFavorite(body)
                             }
-                            else{
+                            else {
                                 val body = JsonObject().apply {
                                     addProperty("media_type", "movie")
                                     addProperty("media_id", movie.movieId)
@@ -188,7 +188,7 @@ class MovieDetailActivity:AppCompatActivity(){
         })
     }
 
-    fun markFavorite(body:JsonObject){
+    fun markFavorite(body: JsonObject){
         var favResponse: FavoriteResponse?
         RetrofitService.getMovieApi().markAsFavorite(
             CurrentUser.user!!.account_id,

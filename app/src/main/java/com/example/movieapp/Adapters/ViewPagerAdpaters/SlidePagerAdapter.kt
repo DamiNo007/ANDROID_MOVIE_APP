@@ -8,14 +8,14 @@ import androidx.fragment.app.FragmentPagerAdapter
 //SLIDEPAGERADAPTER
 class SlidePagerAdapter(
     fragmentManager: FragmentManager?,
-    private val fragmentList:List<Fragment>
+    private val fragmentList: List<Fragment>
 ):
         FragmentPagerAdapter(fragmentManager!!){
-    override fun getItem(position: Int):Fragment{
+    override fun getItem(position: Int): Fragment{
         return fragmentList[position]
     }
 
-    override fun getCount():Int{
+    override fun getCount(): Int{
         return fragmentList.size
     }
 }

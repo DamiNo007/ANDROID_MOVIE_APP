@@ -40,7 +40,7 @@ public class FirstFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
 
-        var view:View = inflater!!.inflate(R.layout.first_fragment,container,false)
+        var view: View = inflater!!.inflate(R.layout.first_fragment,container,false)
         recyclerView = view.findViewById(R.id.recyclerView)
         storiesRecyclerView = view.findViewById(R.id.recyclerViewStories)
         recyclerView.layoutManager =
@@ -81,7 +81,7 @@ public class FirstFragment : Fragment(),
                 call: Call<MoviesResponse>,
                 response: Response<MoviesResponse>
             ) {
-                var genres:List<MovieGenres>?=null
+                var genres: List<MovieGenres>?=null
                 Log.d("Genres", response.body().toString())
                 if (response.isSuccessful) {
                     genres = response.body()?.genres
@@ -118,7 +118,7 @@ public class FirstFragment : Fragment(),
     }
 
 
-    private fun storyGenerator() : ArrayList<Story>{
+    private fun storyGenerator(): ArrayList<Story>{
         var listStories = Stories.stories
         listStories.add(
             Story(

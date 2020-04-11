@@ -8,15 +8,15 @@ import androidx.viewpager.widget.ViewPager
 class CustomViewPager: ViewPager {
     private var swipable = false
 
-    constructor(context:Context?):super(context!!){}
-    constructor(context:Context?, attrs: AttributeSet?):super(
+    constructor(context:Context?): super(context!!){}
+    constructor(context:Context?, attrs: AttributeSet?): super(
         context!!,
         attrs
     ){
         swipable = true
     }
 
-    override fun onTouchEvent(event: MotionEvent):Boolean{
+    override fun onTouchEvent(event: MotionEvent): Boolean{
         return if(swipable){
             super.onTouchEvent(event)
         }else{
@@ -24,11 +24,11 @@ class CustomViewPager: ViewPager {
         }
     }
 
-    override fun onInterceptTouchEvent(ev:MotionEvent):Boolean{
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean{
         return if(swipable) super.onInterceptTouchEvent(ev) else false
     }
 
-    fun setSwipable(swipe:Boolean){
+    fun setSwipable(swipe: Boolean){
         swipable = swipe
     }
 }

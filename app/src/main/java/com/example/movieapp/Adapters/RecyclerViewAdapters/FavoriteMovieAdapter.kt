@@ -22,7 +22,7 @@ class FavoriteMovieAdapter(
 ) : RecyclerView.Adapter<FavoriteMovieAdapter.FavoriteMovieViewHolder>() {
 
     private var mContext: Context? = null
-    private val baseImageUrl:String = "https://image.tmdb.org/t/p/w500"
+    private val baseImageUrl: String = "https://image.tmdb.org/t/p/w500"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteMovieViewHolder {
         this.mContext = parent.context
@@ -39,7 +39,7 @@ class FavoriteMovieAdapter(
     override fun onBindViewHolder(holder: FavoriteMovieViewHolder, position: Int) {
         val mMovie = list!!.get(position)
 
-        if(mMovie.imgPath != null){
+        if (mMovie.imgPath != null) {
             Glide.with(mContext!!)
                 .load(baseImageUrl + mMovie.imgPath)
                 .into(holder.imgMovie)
@@ -51,19 +51,19 @@ class FavoriteMovieAdapter(
         holder.tvDate.setText("Date: ")
         holder.tvRating.setText("Rating: ")
 
-        if(mMovie.title != null){
+        if (mMovie.title != null) {
             holder.tvTitleContent.setText(mMovie.title)
         }
 
-        if(mMovie.date != null){
+        if (mMovie.date != null) {
             holder.tvDateContent.text = mMovie.date.toString()
         }
 
-        if(mMovie.rating!=null){
+        if (mMovie.rating != null) {
             holder.tvRatingContent.text = mMovie.rating.toString()
         }
-        var id: Int?=0
-        if(mMovie.genreIds != null){
+        var id: Int? = 0
+        if (mMovie.genreIds != null) {
             try{
                 id = mMovie.genreIds.get(0)
             }catch(e:Exception){
@@ -72,7 +72,7 @@ class FavoriteMovieAdapter(
 
             if (id != null) {
                 for(genre in genreList!!){
-                    if (genre.genreId===id){
+                    if (genre.genreId === id){
                         holder.tvGenreContent.text =  genre.genreName
                     }
                 }
@@ -89,7 +89,7 @@ class FavoriteMovieAdapter(
         notifyDataSetChanged()
     }
 
-    inner class FavoriteMovieViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+    inner class FavoriteMovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val imgMovie: ImageView = itemView.findViewById(R.id.imgMovie)
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val tvGenre: TextView = itemView.findViewById(R.id.tvGenre)

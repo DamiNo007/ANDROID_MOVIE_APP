@@ -25,7 +25,7 @@ class MainPageActivity: AppCompatActivity(){
         ThirdFragment()
     private var fragmentList: MutableList<Fragment> = ArrayList()
     private var fragmentManager: FragmentManager?=null
-    private var transaction : FragmentTransaction?=null
+    private var transaction: FragmentTransaction?=null
     private lateinit var pager: CustomViewPager
     private var pagerAdapter: PagerAdapter?=null
 
@@ -47,7 +47,7 @@ class MainPageActivity: AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
         fragmentManager = supportFragmentManager
-        var bottomNavigation:BottomNavigationView = findViewById(R.id.nav_menu)
+        var bottomNavigation: BottomNavigationView = findViewById(R.id.nav_menu)
         bottomNavigation.setOnNavigationItemSelectedListener ( navListener )
         fragmentList.add(firstFragment)
         fragmentList.add(secondFragment)
