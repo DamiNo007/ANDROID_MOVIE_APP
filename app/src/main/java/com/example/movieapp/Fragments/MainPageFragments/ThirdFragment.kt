@@ -21,17 +21,25 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.registration.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
+import kotlin.coroutines.CoroutineContext
 
-//THIRDFRAGMENT
-class ThirdFragment : Fragment() {
+//THIRDFRAGMENTDEVELOP2BRANCH
+class ThirdFragment : Fragment(), CoroutineScope {
 
     private lateinit var userName: TextView
     private lateinit var userFullName: TextView
     private lateinit var logOutBtn: Button
+    private val job = SupervisorJob()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,44 +58,17 @@ class ThirdFragment : Fragment() {
         userFullName.text = CurrentUser.user?.name
 
         logOutBtn.setOnClickListener() {
-            fun goodbye() {
-                val intent = Intent(this.activity, LogRegActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                val sharedPreference: SharedPreferences =
-                    this.activity!!.getSharedPreferences("CURRENT_USER", Context.MODE_PRIVATE)
-                sharedPreference.edit().remove("currentUser").commit()
-                Toast.makeText(
-                    this.context,
-                    "See you, " + CurrentUser.user?.userName,
-                    Toast.LENGTH_SHORT
-                ).show()
-                startActivity(intent)
-                this.activity!!.overridePendingTransition(0, 0)
-                ActivityCompat.finishAffinity(this.activity!!)
-            }
-
             val body = JsonObject().apply {
-                addProperty("session_id", CurrentUser.user?.sessionId)
+                addProperty("session_id", CurrentUser.user!!.sessionId)
             }
-
-            RetrofitService.getMovieApi()
-                .deleteSession(RetrofitService.getApiKey(), body).enqueue(object :
-                    Callback<JsonObject> {
-                    override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    override fun onResponse(
-                        call: Call<JsonObject>,
-                        response: Response<JsonObject>
-                    ) {
-                        if (response.isSuccessful) {
-                            goodbye()
-                        }
-                    }
-                })
+            logout(body)
         }
         return view
+    }
+
+    //LOGOUT USING COROUTINES
+    fun logout(body: JsonObject) {
+
     }
 
     fun goodbye() {

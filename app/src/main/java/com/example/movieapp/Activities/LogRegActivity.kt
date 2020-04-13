@@ -15,7 +15,7 @@ import com.example.movieapp.Fragments.LogRegFragments.RegisterFragment
 import com.example.movieapp.ViewPager.CustomViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-//LOGREGACTIVITY
+//LOGREGACTIVITYDEVELOP2BRANCH
 class LogRegActivity : AppCompatActivity() {
 
     private var registerFragment: Fragment =

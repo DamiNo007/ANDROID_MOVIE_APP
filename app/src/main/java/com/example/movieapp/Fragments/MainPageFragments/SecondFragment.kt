@@ -18,17 +18,24 @@ import com.example.movieapp.Responses.Movie
 import com.example.movieapp.Responses.MovieGenres
 import com.example.movieapp.Responses.MoviesResponse
 import com.example.movieapp.API.RetrofitService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.CoroutineContext
 
-//SECONDFRAGMENT
+//SECONDFRAGMENTDEVELOP2BRANCH
 class SecondFragment : Fragment(),
-    FavoriteMovieAdapter.RecyclerViewItemClick {
+    FavoriteMovieAdapter.RecyclerViewItemClick, CoroutineScope {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private var favMovieAdapter: FavoriteMovieAdapter? = null
+    private val job = SupervisorJob()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +53,7 @@ class SecondFragment : Fragment(),
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         swipeRefreshLayout.setOnRefreshListener {
             favMovieAdapter?.clearAll()
-            getFavoriteMovies()
+            getFavoriteMoviesCoroutines()
         }
 
         favMovieAdapter =
@@ -55,17 +62,19 @@ class SecondFragment : Fragment(),
             )
         recyclerView.adapter = favMovieAdapter
 
-        getFavoriteMovies()
-        getGenres()
+        getFavoriteMoviesCoroutines()
+        getGenresCoroutines()
 
         return view
     }
 
 
+    /*
+    //GETTING FAVORITE MOVIES WITHOUT COROUTINES
     private fun getFavoriteMovies() {
         swipeRefreshLayout.isRefreshing = true
         RetrofitService.getMovieApi().getFavoriteMovieList(
-            CurrentUser.user?.account_id,
+            CurrentUser.user?.accountId,
             RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString()
         ).enqueue(object :
             Callback<MoviesResponse> {
@@ -91,7 +100,15 @@ class SecondFragment : Fragment(),
             }
         })
     }
+     */
 
+    //GETTING FAVORITE MOVIES USING COROUTINES
+    private fun getFavoriteMoviesCoroutines() {
+
+    }
+
+    /*
+    //GETTING GENRES WITHOUT COROUTINES
     fun getGenres() {
         RetrofitService.getMovieApi()
             .getGenres(RetrofitService.getApiKey()).enqueue(object :
@@ -112,6 +129,12 @@ class SecondFragment : Fragment(),
                     }
                 }
             })
+    }
+     */
+
+    //GETTIN GENRES USING COROUTINES
+    fun getGenresCoroutines() {
+
     }
 
     override fun itemClick(position: Int, item: Movie) {

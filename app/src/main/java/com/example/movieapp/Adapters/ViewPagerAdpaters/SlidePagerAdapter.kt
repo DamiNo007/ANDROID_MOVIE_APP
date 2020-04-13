@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-//SLIDEPAGERADAPTER
+//SLIDEPAGERADAPTERDEVELOP2BRANCH
 class SlidePagerAdapter(
     fragmentManager: FragmentManager?,
     private val fragmentList: List<Fragment>
