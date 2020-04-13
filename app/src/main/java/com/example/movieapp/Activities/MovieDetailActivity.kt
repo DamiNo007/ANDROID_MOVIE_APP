@@ -14,13 +14,18 @@ import com.example.movieapp.API.RetrofitService
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
+import kotlin.coroutines.CoroutineContext
 
 //MOVIEDETAILACTIVITYDEVELOP2BRANCH
-class MovieDetailActivity : AppCompatActivity() {
+class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var progressBar: ProgressBar
     private lateinit var tvTime: TextView
@@ -46,6 +51,9 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var tvTimeContent: TextView
     private var isFavorite = false
     private val baseImageUrl: String = "https://image.tmdb.org/t/p/w500"
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +83,11 @@ class MovieDetailActivity : AppCompatActivity() {
         tvAge = findViewById(R.id.tvAge)
 
         val movieId = intent.getIntExtra("movie_id", 1)
-        getMovie(id = movieId)
+        getMovieCoroutines(id = movieId)
     }
 
+    /*
+    //GETTING MOVIE WITHOUT COROUTINES
     private fun getMovie(id: Int) {
         RetrofitService.getMovieApi()
             .getMovieById(id, RetrofitService.getApiKey()).enqueue(object :
@@ -188,7 +198,16 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
             })
     }
+     */
 
+    //GETTING MOVIE USING COROUTINES
+    private fun getMovieCoroutines(id: Int) {
+
+
+    }
+
+    /*
+    //MARKING AS FAVORITE WITHOUT COROUTINES
     fun markFavorite(body: JsonObject) {
         var favResponse: FavoriteResponse?
         RetrofitService.getMovieApi().markAsFavorite(
@@ -209,6 +228,12 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+     */
+
+    //MARKING AS FAVORITE USING COROUTINES
+    fun markFavoriteCoroutines(body: JsonObject) {
+
     }
 
     private fun notify(favResponse: FavoriteResponse) {
