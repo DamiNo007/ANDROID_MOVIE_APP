@@ -17,17 +17,12 @@ import com.example.movieapp.Responses.Token
 import com.example.movieapp.User
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.coroutines.CoroutineContext
 
-//REGISTERFRAGMENTDEVELOP2BRANCH
-class RegisterFragment : Fragment(), CoroutineScope {
+//REGISTERFRAGMENT
+class RegisterFragment : Fragment() {
 
     lateinit var editfirstName: EditText
     lateinit var editlastName: EditText
@@ -35,8 +30,6 @@ class RegisterFragment : Fragment(), CoroutineScope {
     lateinit var editPassword: EditText
     lateinit var confPassword: EditText
     lateinit var registerBtn: Button
-    private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +56,7 @@ class RegisterFragment : Fragment(), CoroutineScope {
                 var confpassword: String = confPassword.text.toString()
 
                 if (editPassword.text.toString().equals(confPassword.text.toString())) {
-                    getNewTokenCoroutines()
+                    getNewToken()
                 } else
                     Toast.makeText(this.context, "Пароли не совпадают!", Toast.LENGTH_SHORT).show()
             } else {
@@ -75,8 +68,6 @@ class RegisterFragment : Fragment(), CoroutineScope {
         return view
     }
 
-    /*
-    //GETTING TOKEN WITHOUT COROUTINES
     fun getNewToken() {
         RetrofitService.getMovieApi()
             .getNewToken(RetrofitService.getApiKey()).enqueue(object :
@@ -97,22 +88,6 @@ class RegisterFragment : Fragment(), CoroutineScope {
                     }
                 }
             })
-    }
-     */
-
-    //GETTING TOKEN USING COROUTINES
-    fun getNewTokenCoroutines() {
-        launch {
-            val response =
-                RetrofitService.getMovieApi().getNewTokenCoroutines(RetrofitService.getApiKey())
-                    .await()
-            if (response.isSuccessful) {
-                var requestTokenResponse = response.body()
-                if (requestTokenResponse != null) {
-                    createNewUser(requestTokenResponse)
-                }
-            }
-        }
     }
 
     fun createNewUser(token: Token) {

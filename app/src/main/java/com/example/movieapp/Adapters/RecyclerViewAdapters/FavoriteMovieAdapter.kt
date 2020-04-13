@@ -14,7 +14,7 @@ import com.example.movieapp.Responses.Movie
 import com.example.movieapp.Responses.MovieGenres
 import java.lang.Exception
 
-//FAVORITEMOVIEADAPTERDEVELOP2BRANCH
+//FAVORITEMOVIEADAPTER
 class FavoriteMovieAdapter(
     var list: List<Movie>? = null,
     var genreList: List<MovieGenres>? = null,
