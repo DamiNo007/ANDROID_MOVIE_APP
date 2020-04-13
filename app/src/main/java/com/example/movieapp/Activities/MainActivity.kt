@@ -16,15 +16,23 @@ import com.example.movieapp.API.RetrofitService
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
+import kotlin.coroutines.CoroutineContext
 
-//MAINACTIVITY
-class MainActivity : AppCompatActivity() {
+//MAINACTIVITYDEVELOP2BRANCH
+class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var progressBar: ProgressBar
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         CurrentUser.user = gson.fromJson<AccountResponse>(json, type)
 
         if (CurrentUser.user != null && CurrentUser.user?.sessionId != null) {
-            getAccount(CurrentUser.user?.sessionId.toString())
+            getAccountCoroutines(CurrentUser.user?.sessionId.toString())
         } else {
             val intent = Intent(this, LogRegActivity::class.java)
             startActivity(intent)
@@ -45,6 +53,8 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
     }
 
+    /*
+    //GETTING ACCOUNT WITHOUT COROUTINES
     fun getAccount(session: String?) {
         var accountResponse: AccountResponse? = null
         RetrofitService.getMovieApi()
@@ -71,6 +81,25 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
+    */
+
+    //GETTING ACCOUNT USING COROUTINES
+    fun getAccountCoroutines(session: String?) {
+        launch {
+            val response = RetrofitService.getMovieApi()
+                .getAccountCoroutines(RetrofitService.getApiKey(), session!!).await()
+            if (response.isSuccessful) {
+                progressBar.visibility = View.GONE
+                val accountResponse = response.body()
+                if (accountResponse != null) {
+                    welcome(accountResponse!!, session)
+                } else {
+                    CurrentUser.user = null
+                    login()
+                }
+            }
+        }
     }
 
     fun welcome(user: AccountResponse, session: String?) {
