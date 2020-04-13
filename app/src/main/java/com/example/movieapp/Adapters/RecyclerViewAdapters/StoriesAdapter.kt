@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.movieapp.R
 import com.example.movieapp.Responses.Story
 
-//STORIESADAPTER
+//STORIESADAPTERDEVELOP2BRANCH
 class StoriesAdapter(
     var list: ArrayList<Story>
 ) : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {

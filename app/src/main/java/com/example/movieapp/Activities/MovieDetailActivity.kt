@@ -19,7 +19,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
 
-//MOVIEDETAILACTIVITY
+//MOVIEDETAILACTIVITYDEVELOP2BRANCH
 class MovieDetailActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar

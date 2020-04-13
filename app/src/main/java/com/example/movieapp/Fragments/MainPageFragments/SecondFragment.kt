@@ -22,7 +22,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-//SECONDFRAGMENT
+//SECONDFRAGMENTDEVELOP2BRANCH
 class SecondFragment : Fragment(),
     FavoriteMovieAdapter.RecyclerViewItemClick {
 

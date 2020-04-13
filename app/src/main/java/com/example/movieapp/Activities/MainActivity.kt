@@ -21,7 +21,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
 
-//MAINACTIVITY
+//MAINACTIVITYDEVELOP2BRANCH
 class MainActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar

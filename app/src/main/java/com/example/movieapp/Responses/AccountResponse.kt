@@ -2,7 +2,7 @@ package com.example.movieapp.Responses
 
 import com.google.gson.annotations.SerializedName
 
-//ACCOUNTRESPONSE
+//ACCOUNTRESPONSEDEVELOP2BRANCH
 data class AccountResponse(
     @SerializedName("id") val account_id: Int? = null,
     @SerializedName("name") val name: String? = null,

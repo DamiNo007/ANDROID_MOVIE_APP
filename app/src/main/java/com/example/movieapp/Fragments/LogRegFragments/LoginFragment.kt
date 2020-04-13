@@ -30,7 +30,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
 
-//LOGINFRAGMENT
+//LOGINFRAGMENTDEVELOP2BRANCH
 class LoginFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

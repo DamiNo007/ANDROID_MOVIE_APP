@@ -16,7 +16,7 @@ import com.example.movieapp.Fragments.MainPageFragments.ThirdFragment
 import com.example.movieapp.ViewPager.CustomViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-//MAINPAGEACTIVITY
+//MAINPAGEACTIVITYDEVELOP2BRANCH
 class MainPageActivity : AppCompatActivity() {
 
     private var firstFragment: Fragment = FirstFragment()

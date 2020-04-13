@@ -21,7 +21,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-//REGISTERFRAGMENT
+//REGISTERFRAGMENTDEVELOP2BRANCH
 class RegisterFragment : Fragment() {
 
     lateinit var editfirstName: EditText
