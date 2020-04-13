@@ -68,7 +68,13 @@ class ThirdFragment : Fragment(), CoroutineScope {
 
     //LOGOUT USING COROUTINES
     fun logout(body: JsonObject) {
-
+        launch {
+            val response = RetrofitService.getMovieApi()
+                .deleteSessionCoroutines(RetrofitService.getApiKey(), body).await()
+            if (response.isSuccessful) {
+                goodbye()
+            }
+        }
     }
 
     fun goodbye() {
