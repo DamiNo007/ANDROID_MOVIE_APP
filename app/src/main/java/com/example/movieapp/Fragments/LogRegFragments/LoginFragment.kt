@@ -131,7 +131,7 @@ class LoginFragment : Fragment() {
                     if (response.isSuccessful) {
                         session = gson.fromJson(response.body(), SessionResponse::class.java)
                         if (session != null) {
-                            val session_id = session?.session_id
+                            val session_id = session?.sessionId
                             getAccount(session_id)
                         }
                     }

@@ -65,7 +65,7 @@ class SecondFragment : Fragment(),
     private fun getFavoriteMovies() {
         swipeRefreshLayout.isRefreshing = true
         RetrofitService.getMovieApi().getFavoriteMovieList(
-            CurrentUser.user?.account_id,
+            CurrentUser.user?.accountId,
             RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString()
         ).enqueue(object :
             Callback<MoviesResponse> {

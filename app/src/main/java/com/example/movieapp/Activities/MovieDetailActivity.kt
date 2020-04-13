@@ -192,7 +192,7 @@ class MovieDetailActivity : AppCompatActivity() {
     fun markFavorite(body: JsonObject) {
         var favResponse: FavoriteResponse?
         RetrofitService.getMovieApi().markAsFavorite(
-            CurrentUser.user?.account_id,
+            CurrentUser.user?.accountId,
             RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString(), body
         ).enqueue(object :
             Callback<JsonObject> {
@@ -212,8 +212,8 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun notify(favResponse: FavoriteResponse) {
-        val status_code = favResponse?.status_code
-        if (status_code == 0) {
+        val statusCode = favResponse?.statusСode
+        if (statusCode == 0) {
             Toast.makeText(this, favResponse.toString(), Toast.LENGTH_SHORT).show()
         }
     }
