@@ -25,18 +25,13 @@ import com.example.movieapp.Responses.Token
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
-import kotlin.coroutines.CoroutineContext
 
 //LOGINFRAGMENT
-class LoginFragment : Fragment(), CoroutineScope {
+class LoginFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -45,15 +40,13 @@ class LoginFragment : Fragment(), CoroutineScope {
     private lateinit var login: EditText
     private lateinit var password: EditText
     private lateinit var progressBar: ProgressBar
-    private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view: View = inflater!!.inflate(R.layout.login, container, false)
+        var view: View = inflater?.inflate(R.layout.login, container, false)
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.INVISIBLE
         login = view.findViewById(R.id.login)
@@ -62,13 +55,11 @@ class LoginFragment : Fragment(), CoroutineScope {
         loginBtn.setOnClickListener() {
             val userLogin: String = login.text.toString().trim()
             val userPassword: String = password.text.toString().trim()
-            loginCoroutines(userLogin, userPassword)
+            login(userLogin, userPassword)
         }
         return view
     }
 
-    /*
-    //LOGIN WITHOUT COROUTINES
     fun login(username: String, password: String) {
         var requestTokenResponse: Token? = null
         progressBar.visibility = View.VISIBLE
@@ -100,32 +91,6 @@ class LoginFragment : Fragment(), CoroutineScope {
             })
     }
 
-     */
-
-    //LOGIN USING COROUTINES
-    fun loginCoroutines(username: String, password: String) {
-        progressBar.visibility = View.VISIBLE
-        launch {
-            val response =
-                RetrofitService.getMovieApi().getNewTokenCoroutines(RetrofitService.getApiKey())
-                    .await()
-            if (response.isSuccessful) {
-                var requestTokenResponse = response.body()
-                if (requestTokenResponse != null) {
-                    val request_token: String? = requestTokenResponse?.requestToken
-                    val body = JsonObject().apply {
-                        addProperty("username", username)
-                        addProperty("password", password)
-                        addProperty("request_token", request_token)
-                    }
-                    getLoginResponseCoroutines(body)
-                }
-            }
-        }
-    }
-
-    /*
-    //GETTING LOGINRESPONSE WITHOUT COROUTINES
     fun getLoginResponse(body: JsonObject) {
         var logRseponse: LoginResponse? = null
         RetrofitService.getMovieApi()
@@ -151,71 +116,39 @@ class LoginFragment : Fragment(), CoroutineScope {
                 }
             })
     }
-     */
 
-    //GETTING LOGINRESPONSE USING COROUTINES
-    fun getLoginResponseCoroutines(body: JsonObject) {
-        launch {
-            val response =
-                RetrofitService.getMovieApi().loginCoroutines(RetrofitService.getApiKey(), body)
-                    .await()
-            if (response.isSuccessful) {
-                val responseLog = response.body()
-                if (responseLog != null) {
-                    val body = JsonObject().apply {
-                        addProperty("request_token", responseLog?.requestToken.toString())
-                    }
-                    getSessionCoroutines(body)
-                }
-            } else {
-                val error = "Incorrect Login or Password!"
-                error(error)
-            }
-        }
-    }
-
-    /*
-    //GETTING SESSION WITHOUT COROUTINES
-    fun getSession(body: JsonObject){
+    fun getSession(body: JsonObject) {
         var session: SessionResponse? = null
         RetrofitService.getMovieApi()
-            .getSession(RetrofitService.getApiKey(),body).enqueue(object :
-            Callback<JsonObject> {
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            .getSession(RetrofitService.getApiKey(), body).enqueue(object :
+                Callback<JsonObject> {
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
 
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                var gson:Gson = Gson()
-                if(response.isSuccessful) {
-                    session = gson.fromJson(response.body(), SessionResponse::class.java)
-                    if (session != null) {
-                        val session_id = session!!.sessionId
-                        getAccount(session_id)
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                    var gson: Gson = Gson()
+                    if (response.isSuccessful) {
+                        session = gson.fromJson(response.body(), SessionResponse::class.java)
+                        if (session != null) {
+                            val session_id = session?.session_id
+                            getAccount(session_id)
+                        }
                     }
                 }
-            }
-        })
-    }
-    */
-
-    //GETTING SESSION USING COROUTINES
-    fun getSessionCoroutines(body: JsonObject) {
-        launch {
-            val response = RetrofitService.getMovieApi()
-                .getSessionCoroutines(RetrofitService.getApiKey(), body).await()
-            if (response.isSuccessful) {
-                val session = response.body()
-                if (session != null) {
-                    val session_id = session?.sessionId
-                    getAccountCoroutines(session_id)
-                }
-            }
-        }
+            })
     }
 
-    /*
-    //GETTING ACCOUNT WITHOUT COROUTINES
+    fun saveSessionOftheCurrentUser() {
+        val currUserSharedPreference: SharedPreferences =
+            this.activity!!.getSharedPreferences("CURRENT_USER", Context.MODE_PRIVATE)
+        var currUserEditor = currUserSharedPreference.edit()
+        val gson = Gson()
+        val json: String = gson?.toJson(CurrentUser.user)
+        currUserEditor.putString("currentUser", json)
+        currUserEditor.commit()
+    }
+
     fun getAccount(session: String?) {
         Toast.makeText(this.context, "Loading...", Toast.LENGTH_SHORT).show()
 
@@ -241,23 +174,7 @@ class LoginFragment : Fragment(), CoroutineScope {
                 }
 
             })
-    }
-     */
 
-    //GETTING ACCOUNT USING COROUTINES
-    fun getAccountCoroutines(session: String?) {
-        Toast.makeText(this.context, "Loading...", Toast.LENGTH_SHORT).show()
-        launch {
-            val response = RetrofitService.getMovieApi()
-                .getAccountCoroutines(RetrofitService.getApiKey(), session!!).await()
-
-            if (response.isSuccessful) {
-                val accountResponse = response.body()
-                if (accountResponse != null) {
-                    welcome(accountResponse!!, session)
-                }
-            }
-        }
     }
 
     fun error(error: String) {
@@ -277,15 +194,5 @@ class LoginFragment : Fragment(), CoroutineScope {
         startActivity(intent)
         this.activity!!.overridePendingTransition(0, 0)
         ActivityCompat.finishAffinity(this.activity!!)
-    }
-
-    fun saveSessionOftheCurrentUser() {
-        val currUserSharedPreference: SharedPreferences =
-            this.activity!!.getSharedPreferences("CURRENT_USER", Context.MODE_PRIVATE)
-        var currUserEditor = currUserSharedPreference.edit()
-        val gson = Gson()
-        val json: String = gson?.toJson(CurrentUser.user)
-        currUserEditor.putString("currentUser", json)
-        currUserEditor.commit()
     }
 }

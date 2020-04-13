@@ -2,9 +2,9 @@ package com.example.movieapp.Responses
 
 import com.google.gson.annotations.SerializedName
 
-//ACCOUNTRESPONSEDEVELOP2BRANCH
+//ACCOUNTRESPONSE
 data class AccountResponse(
-    @SerializedName("id") val accountId: Int? = null,
+    @SerializedName("id") val account_id: Int? = null,
     @SerializedName("name") val name: String? = null,
     @SerializedName("username") val userName: String? = null,
     @SerializedName("include_adult") val isAdult: Boolean? = null,

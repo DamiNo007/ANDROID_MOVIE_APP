@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
-//CUSTOMVIEWPAGERDEVELOP2BRANCH
+//CUSTOMVIEWPAGER
 class CustomViewPager : ViewPager {
     private var swipable = false
 

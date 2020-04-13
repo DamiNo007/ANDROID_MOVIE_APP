@@ -3,7 +3,7 @@ package com.example.movieapp.Responses
 import android.text.method.MovementMethod
 import com.google.gson.annotations.SerializedName
 
-//MOVIEDEVELOP2BRANCH
+//MOVIE
 data class Movie(
     @SerializedName("id") val movieId: Int? = null,
     @SerializedName("title") val title: String? = null,

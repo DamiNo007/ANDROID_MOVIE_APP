@@ -4,7 +4,7 @@ import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 
-//LOGINRESPONSEDEVELOP2BRANCH
+//LOGINRESPONSE
 data class LoginResponse(
     @SerializedName("success") val isSuccess: Boolean? = null,
     @SerializedName("expires_at") val expiredAt: String? = null,
