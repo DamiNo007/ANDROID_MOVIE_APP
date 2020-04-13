@@ -104,7 +104,23 @@ class SecondFragment : Fragment(),
 
     //GETTING FAVORITE MOVIES USING COROUTINES
     private fun getFavoriteMoviesCoroutines() {
+        launch {
+            val response = RetrofitService.getMovieApi().getFavoriteMovieListCoroutines(
+                CurrentUser.user?.accountId,
+                RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString()
+            ).await()
 
+            if (response.isSuccessful) {
+                val list: List<Movie>? = response.body()?.results
+                if (list != null) {
+                    CurrentUser.favoritList = list
+                }
+                favMovieAdapter?.list = list
+                favMovieAdapter?.notifyDataSetChanged()
+            }
+
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     /*
@@ -134,7 +150,17 @@ class SecondFragment : Fragment(),
 
     //GETTIN GENRES USING COROUTINES
     fun getGenresCoroutines() {
+        launch {
+            val response =
+                RetrofitService.getMovieApi().getGenresCoroutines(RetrofitService.getApiKey())
+                    .await()
 
+            if (response.isSuccessful) {
+                val genres = response.body()?.genres
+                favMovieAdapter?.genreList = genres
+                favMovieAdapter?.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun itemClick(position: Int, item: Movie) {
