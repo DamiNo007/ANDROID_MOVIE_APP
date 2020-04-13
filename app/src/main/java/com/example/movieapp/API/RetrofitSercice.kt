@@ -106,7 +106,6 @@ interface MovieApi {
     @GET("account")
     fun getAccountCoroutines(@Query("api_key") apiKey: String, @Query("session_id") sessionId: String): Deferred<Response<AccountResponse>>
 
-
     @GET("movie/popular")
     fun getMovieListCoroutines(@Query("api_key") apiKey: String?): Deferred<Response<MoviesResponse>>
 
