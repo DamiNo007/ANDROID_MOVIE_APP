@@ -2,7 +2,7 @@ package com.example.movieapp
 
 import com.example.movieapp.Responses.Token
 
-//USER
+//USERDEVELOP2BRANCH
 data class User(
     var userFirstName: String? = null,
     var userLastName: String? = null,

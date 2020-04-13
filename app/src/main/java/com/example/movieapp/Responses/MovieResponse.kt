@@ -2,7 +2,7 @@ package com.example.movieapp.Responses
 
 import com.google.gson.annotations.SerializedName
 
-//MOVIERESPONSE
+//MOVIERESPONSEDEVELOP2BRANCH
 data class MoviesResponse(
     @SerializedName("page") val page: Int? = null,
     @SerializedName("results") val results: List<Movie>? = null,
