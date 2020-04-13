@@ -17,19 +17,26 @@ import com.example.movieapp.Responses.Movie
 import com.example.movieapp.Responses.MovieGenres
 import com.example.movieapp.Responses.MoviesResponse
 import com.example.movieapp.Responses.Story
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.CoroutineContext
 
 //FIRSTFRAGMENTDEVELOP2BRANCH
 public class FirstFragment : Fragment(),
-    MovieAdapter.RecyclerViewItemClick {
+    MovieAdapter.RecyclerViewItemClick, CoroutineScope {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var storiesRecyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private var movieAdapter: MovieAdapter? = null
     private var storiesAdapter: StoriesAdapter? = null
+    private val job = SupervisorJob()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +58,7 @@ public class FirstFragment : Fragment(),
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         swipeRefreshLayout.setOnRefreshListener {
             movieAdapter?.clearAll()
-            getMovies()
+            getMoviesCoroutines()
         }
 
         movieAdapter =
@@ -65,12 +72,14 @@ public class FirstFragment : Fragment(),
         recyclerView.adapter = movieAdapter
         storiesRecyclerView.adapter = storiesAdapter
 
-        getMovies()
-        getGenres()
+        getMoviesCoroutines()
+        getGenresCoroutines()
 
         return view
     }
 
+    /*
+    //GETTING GENRES WITHOUT COROUTINES
     fun getGenres() {
         RetrofitService.getMovieApi().getGenres(
             RetrofitService.getApiKey()
@@ -93,7 +102,27 @@ public class FirstFragment : Fragment(),
             }
         })
     }
+     */
 
+    //GETTIN GENRES USING COROUTINES
+    fun getGenresCoroutines() {
+        launch {
+            val response =
+                RetrofitService.getMovieApi().getGenresCoroutines(RetrofitService.getApiKey())
+                    .await()
+
+            if (response.isSuccessful) {
+
+                Log.d("Genres", response.body().toString())
+                var genres = response.body()?.genres
+                movieAdapter?.genreList = genres
+                movieAdapter?.notifyDataSetChanged()
+            }
+        }
+    }
+
+    /*
+    //GETTING MOVIES WITHOUT COROUTINES
     private fun getMovies() {
         swipeRefreshLayout.isRefreshing = true
         RetrofitService.getMovieApi().getMovieList(
@@ -119,7 +148,23 @@ public class FirstFragment : Fragment(),
             }
         })
     }
+     */
 
+    //GETTING MOVIES USING COROUTINES
+    private fun getMoviesCoroutines() {
+        swipeRefreshLayout.isRefreshing = true
+        launch {
+            val response =
+                RetrofitService.getMovieApi().getMovieListCoroutines(RetrofitService.getApiKey())
+                    .await()
+            if (response.isSuccessful) {
+                val list: List<Movie>? = response.body()?.results
+                movieAdapter?.list = list
+                movieAdapter?.notifyDataSetChanged()
+            }
+            swipeRefreshLayout.isRefreshing = false
+        }
+    }
 
     private fun storyGenerator(): ArrayList<Story> {
         var listStories = Stories.stories
