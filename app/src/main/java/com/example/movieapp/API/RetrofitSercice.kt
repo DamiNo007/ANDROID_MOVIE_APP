@@ -1,11 +1,14 @@
 package com.example.movieapp.API
 
 import android.util.Log
-import com.example.movieapp.Responses.MoviesResponse
+import com.example.movieapp.Responses.*
 import com.google.gson.JsonObject
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -24,6 +27,7 @@ object RetrofitService {
     fun getMovieApi(): MovieApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .client(getOkHttp())
             .build()
@@ -85,4 +89,45 @@ interface MovieApi {
 
     @GET("genre/movie/list")
     fun getGenres(@Query("api_key") apiKey: String?): Call<MoviesResponse>
+
+    //USING COROUTINES
+    @GET("authentication/token/new")
+    fun getNewTokenCoroutines(@Query("api_key") apiKey: String): Deferred<Response<Token>>
+
+    @POST("authentication/token/validate_with_login")
+    fun loginCoroutines(@Query("api_key") apiKey: String, @Body body: JsonObject): Deferred<Response<LoginResponse>>
+
+    @HTTP(method = "DELETE", path = "authentication/session", hasBody = true)
+    fun deleteSessionCoroutines(@Query("api_key") apiKey: String, @Body body: JsonObject): Deferred<Response<JsonObject>>
+
+    @POST("authentication/session/new")
+    fun getSessionCoroutines(@Query("api_key") apiKey: String, @Body body: JsonObject): Deferred<Response<SessionResponse>>
+
+    @GET("account")
+    fun getAccountCoroutines(@Query("api_key") apiKey: String, @Query("session_id") sessionId: String): Deferred<Response<AccountResponse>>
+
+
+    @GET("movie/popular")
+    fun getMovieListCoroutines(@Query("api_key") apiKey: String?): Deferred<Response<MoviesResponse>>
+
+    @GET("genre/movie/list")
+    fun getGenresCoroutines(@Query("api_key") apiKey: String?): Deferred<Response<MoviesResponse>>
+
+    @GET("account/{account_id}/favorite/movies")
+    fun getFavoriteMovieListCoroutines(
+        @Path("account_id") id: Int?, @Query("api_key") apiKey: String?, @Query(
+            "session_id"
+        ) sessionId: String
+    ): Deferred<Response<MoviesResponse>>
+
+    @POST("account/{account_id}/favorite")
+    fun markAsFavoriteCoroutines(
+        @Path("account_id") id: Int?, @Query("api_key") apiKey: String?, @Query(
+            "session_id"
+        ) sessionId: String, @Body body: JsonObject
+    ): Deferred<Response<FavoriteResponse>>
+
+    @GET("movie/{id}")
+    fun getMovieByIdCoroutines(@Path("id") id: Int, @Query("api_key") apiKey: String?): Deferred<Response<Movie>>
 }
+
