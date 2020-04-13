@@ -21,8 +21,9 @@ import com.example.movieapp.API.RetrofitService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 //SECONDFRAGMENT
-class SecondFragment: Fragment(),
+class SecondFragment : Fragment(),
     FavoriteMovieAdapter.RecyclerViewItemClick {
 
     private lateinit var recyclerView: RecyclerView
@@ -38,7 +39,7 @@ class SecondFragment: Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view: View = inflater!!.inflate(R.layout.second_fragment, container, false)
+        var view: View = inflater?.inflate(R.layout.second_fragment, container, false)
         recyclerView = view.findViewById(R.id.favRecyclerView)
         recyclerView.layoutManager =
             LinearLayoutManager(this.activity, LinearLayoutManager.VERTICAL, false)
@@ -64,8 +65,9 @@ class SecondFragment: Fragment(),
     private fun getFavoriteMovies() {
         swipeRefreshLayout.isRefreshing = true
         RetrofitService.getMovieApi().getFavoriteMovieList(
-            CurrentUser.user!!.account_id,
-            RetrofitService.getApiKey(), CurrentUser.user!!.sessionId.toString()).enqueue(object :
+            CurrentUser.user?.account_id,
+            RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString()
+        ).enqueue(object :
             Callback<MoviesResponse> {
 
             override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
@@ -90,26 +92,26 @@ class SecondFragment: Fragment(),
         })
     }
 
-    fun getGenres(){
+    fun getGenres() {
         RetrofitService.getMovieApi()
             .getGenres(RetrofitService.getApiKey()).enqueue(object :
-            Callback<MoviesResponse> {
+                Callback<MoviesResponse> {
 
-            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {}
+                override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {}
 
-            override fun onResponse(
-                call: Call<MoviesResponse>,
-                response: Response<MoviesResponse>
-            ) {
-                var genres: List<MovieGenres>?=null
-                Log.d("Genres", response.body().toString())
-                if (response.isSuccessful) {
-                    genres = response.body()?.genres
-                    favMovieAdapter?.genreList = genres
-                    favMovieAdapter?.notifyDataSetChanged()
+                override fun onResponse(
+                    call: Call<MoviesResponse>,
+                    response: Response<MoviesResponse>
+                ) {
+                    var genres: List<MovieGenres>? = null
+                    Log.d("Genres", response.body().toString())
+                    if (response.isSuccessful) {
+                        genres = response.body()?.genres
+                        favMovieAdapter?.genreList = genres
+                        favMovieAdapter?.notifyDataSetChanged()
+                    }
                 }
-            }
-        })
+            })
     }
 
     override fun itemClick(position: Int, item: Movie) {

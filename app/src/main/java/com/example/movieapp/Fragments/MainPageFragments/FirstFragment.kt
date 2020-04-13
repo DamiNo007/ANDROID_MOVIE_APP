@@ -20,6 +20,7 @@ import com.example.movieapp.Responses.Story
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 //FIRSTFRAGMENT
 public class FirstFragment : Fragment(),
     MovieAdapter.RecyclerViewItemClick {
@@ -28,7 +29,7 @@ public class FirstFragment : Fragment(),
     private lateinit var storiesRecyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private var movieAdapter: MovieAdapter? = null
-    private var storiesAdapter: StoriesAdapter?= null
+    private var storiesAdapter: StoriesAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,7 @@ public class FirstFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
 
-        var view: View = inflater!!.inflate(R.layout.first_fragment,container,false)
+        var view: View = inflater?.inflate(R.layout.first_fragment, container, false)
         recyclerView = view.findViewById(R.id.recyclerView)
         storiesRecyclerView = view.findViewById(R.id.recyclerViewStories)
         recyclerView.layoutManager =
@@ -70,9 +71,10 @@ public class FirstFragment : Fragment(),
         return view
     }
 
-    fun getGenres(){
+    fun getGenres() {
         RetrofitService.getMovieApi().getGenres(
-            RetrofitService.getApiKey()).enqueue(object :
+            RetrofitService.getApiKey()
+        ).enqueue(object :
             Callback<MoviesResponse> {
 
             override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {}
@@ -81,7 +83,7 @@ public class FirstFragment : Fragment(),
                 call: Call<MoviesResponse>,
                 response: Response<MoviesResponse>
             ) {
-                var genres: List<MovieGenres>?=null
+                var genres: List<MovieGenres>? = null
                 Log.d("Genres", response.body().toString())
                 if (response.isSuccessful) {
                     genres = response.body()?.genres
@@ -95,7 +97,8 @@ public class FirstFragment : Fragment(),
     private fun getMovies() {
         swipeRefreshLayout.isRefreshing = true
         RetrofitService.getMovieApi().getMovieList(
-            RetrofitService.getApiKey()).enqueue(object :
+            RetrofitService.getApiKey()
+        ).enqueue(object :
             Callback<MoviesResponse> {
 
             override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
@@ -118,7 +121,7 @@ public class FirstFragment : Fragment(),
     }
 
 
-    private fun storyGenerator(): ArrayList<Story>{
+    private fun storyGenerator(): ArrayList<Story> {
         var listStories = Stories.stories
         listStories.add(
             Story(

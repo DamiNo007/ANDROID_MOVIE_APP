@@ -13,6 +13,7 @@ import com.example.movieapp.R
 import com.example.movieapp.Responses.Movie
 import com.example.movieapp.Responses.MovieGenres
 import java.lang.Exception
+
 //MOVIEADAPTER
 class MovieAdapter(
     var list: List<Movie>? = null,
@@ -20,11 +21,11 @@ class MovieAdapter(
     val itemClickListener: RecyclerViewItemClick? = null
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
-    private var mContext: Context? = null
-    private val baseImageUrl:String = "https://image.tmdb.org/t/p/w500"
+    private var context: Context? = null
+    private val baseImageUrl: String = "https://image.tmdb.org/t/p/w500"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        this.mContext = parent.context
+        this.context = parent.context
 
         return MovieViewHolder(
             LayoutInflater.from(parent.context).inflate(
@@ -36,39 +37,39 @@ class MovieAdapter(
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val mMovie = list!!.get(position)
+        val movie = list?.get(position)
 
-        if (mMovie.imgPath != null) {
-            Glide.with(mContext!!)
-                .load(baseImageUrl + mMovie.imgPath)
+        if (movie?.imgPath != null) {
+            Glide.with(context!!)
+                .load(baseImageUrl + movie.imgPath)
                 .into(holder.imgMovie)
         }
-        var cnt:Int=0
-        if (mMovie.title != null) {
-            holder.tvTitle.setText(mMovie.title)
+        var cnt: Int = 0
+        if (movie?.title != null) {
+            holder.tvTitle.setText(movie.title)
         }
 
-        if (mMovie.date != null) {
-           holder.tvDate.text = mMovie.date.toString()
+        if (movie?.date != null) {
+            holder.tvDate.text = movie.date.toString()
         }
-        var id: Int?=0
-        if (mMovie.genreIds != null) {
-            try{
-                id = mMovie.genreIds.get(0)
-            }catch(e:Exception){
-                Log.d("Exception:",e.toString())
+        var id: Int? = 0
+        if (movie?.genreIds != null) {
+            try {
+                id = movie.genreIds.get(0)
+            } catch (e: Exception) {
+                Log.d("Exception:", e.toString())
             }
 
-            if (id != null && genreList!=null) {
-                for(genre in genreList!!){
-                    if (genre.genreId===id){
+            if (id != null && genreList != null) {
+                for (genre in genreList!!) {
+                    if (genre.genreId === id) {
                         holder.tvDate.text = holder.tvDate.text.toString() + ", " + genre.genreName
                     }
                 }
             }
         }
-        holder.itemView.setOnClickListener{
-            itemClickListener?.itemClick(mMovie.movieId!!, mMovie!!)
+        holder.itemView.setOnClickListener {
+            itemClickListener?.itemClick(movie?.movieId!!, movie!!)
         }
 
     }
@@ -78,7 +79,7 @@ class MovieAdapter(
         notifyDataSetChanged()
     }
 
-    inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgMovie: ImageView = itemView.findViewById(R.id.imgMovie)
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val tvDate: TextView = itemView.findViewById(R.id.tvDate)

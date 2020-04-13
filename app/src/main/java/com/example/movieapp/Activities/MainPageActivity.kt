@@ -15,8 +15,9 @@ import com.example.movieapp.Fragments.MainPageFragments.SecondFragment
 import com.example.movieapp.Fragments.MainPageFragments.ThirdFragment
 import com.example.movieapp.ViewPager.CustomViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+
 //MAINPAGEACTIVITY
-class MainPageActivity: AppCompatActivity(){
+class MainPageActivity : AppCompatActivity() {
 
     private var firstFragment: Fragment = FirstFragment()
     private var secondFragment: Fragment =
@@ -24,10 +25,10 @@ class MainPageActivity: AppCompatActivity(){
     private var thirdFragment: Fragment =
         ThirdFragment()
     private var fragmentList: MutableList<Fragment> = ArrayList()
-    private var fragmentManager: FragmentManager?=null
-    private var transaction: FragmentTransaction?=null
+    private var fragmentManager: FragmentManager? = null
+    private var transaction: FragmentTransaction? = null
     private lateinit var pager: CustomViewPager
-    private var pagerAdapter: PagerAdapter?=null
+    private var pagerAdapter: PagerAdapter? = null
 
     private val navListener: BottomNavigationView.OnNavigationItemSelectedListener =
         object : BottomNavigationView.OnNavigationItemSelectedListener {
@@ -35,9 +36,9 @@ class MainPageActivity: AppCompatActivity(){
                 transaction = fragmentManager?.beginTransaction()
                 pagerAdapter?.notifyDataSetChanged()
                 when (menuItem.getItemId()) {
-                    R.id.nav_home -> pager.setCurrentItem(0,false)
+                    R.id.nav_home -> pager.setCurrentItem(0, false)
                     R.id.nav_favorite -> pager?.setCurrentItem(1, false)
-                    R.id.nav_account -> pager?.setCurrentItem(2,false)
+                    R.id.nav_account -> pager?.setCurrentItem(2, false)
                 }
                 return false
             }
@@ -48,7 +49,7 @@ class MainPageActivity: AppCompatActivity(){
         setContentView(R.layout.activity_main_page)
         fragmentManager = supportFragmentManager
         var bottomNavigation: BottomNavigationView = findViewById(R.id.nav_menu)
-        bottomNavigation.setOnNavigationItemSelectedListener ( navListener )
+        bottomNavigation.setOnNavigationItemSelectedListener(navListener)
         fragmentList.add(firstFragment)
         fragmentList.add(secondFragment)
         fragmentList.add(thirdFragment)

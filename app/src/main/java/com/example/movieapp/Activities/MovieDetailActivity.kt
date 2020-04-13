@@ -18,31 +18,32 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
-//MOVIEDETAILACTIVITY
-class MovieDetailActivity:AppCompatActivity(){
 
-    private lateinit var progressBar:ProgressBar
+//MOVIEDETAILACTIVITY
+class MovieDetailActivity : AppCompatActivity() {
+
+    private lateinit var progressBar: ProgressBar
     private lateinit var tvTime: TextView
     private lateinit var tvRating: TextView
-    private lateinit var tvPopularity:TextView
-    private lateinit var tvAdult:TextView
-    private lateinit var tvDate:TextView
+    private lateinit var tvPopularity: TextView
+    private lateinit var tvAdult: TextView
+    private lateinit var tvDate: TextView
     private lateinit var imgMovie: ImageView
     private lateinit var tvTitle: TextView
     private lateinit var tvTitleMini: TextView
-    private lateinit var tvDescription:TextView
-    private lateinit var tvFullHD:TextView
-    private lateinit var tvAge:TextView
-    private lateinit var playImg:ImageView
-    private lateinit var trailerImg:ImageButton
-    private lateinit var downloadImg:ImageButton
-    private lateinit var shareImg:ImageButton
+    private lateinit var tvDescription: TextView
+    private lateinit var tvFullHD: TextView
+    private lateinit var tvAge: TextView
+    private lateinit var playImg: ImageView
+    private lateinit var trailerImg: ImageButton
+    private lateinit var downloadImg: ImageButton
+    private lateinit var shareImg: ImageButton
     private lateinit var favImg: ImageButton
-    private lateinit var tvDateContent:TextView
-    private lateinit var tvAdultContent:TextView
-    private lateinit var tvRatingContent:TextView
-    private lateinit var tvPopularityContent:TextView
-    private lateinit var tvTimeContent:TextView
+    private lateinit var tvDateContent: TextView
+    private lateinit var tvAdultContent: TextView
+    private lateinit var tvRatingContent: TextView
+    private lateinit var tvPopularityContent: TextView
+    private lateinit var tvTimeContent: TextView
     private var isFavorite = false
     private val baseImageUrl: String = "https://image.tmdb.org/t/p/w500"
 
@@ -58,7 +59,7 @@ class MovieDetailActivity:AppCompatActivity(){
         tvDate = findViewById(R.id.date)
         tvAdult = findViewById(R.id.adult)
         tvRating = findViewById(R.id.rating)
-        tvPopularity =findViewById(R.id.popularity)
+        tvPopularity = findViewById(R.id.popularity)
         tvTime = findViewById(R.id.time)
         tvDateContent = findViewById(R.id.releaseDate)
         tvAdultContent = findViewById(R.id.isAdult)
@@ -77,141 +78,142 @@ class MovieDetailActivity:AppCompatActivity(){
         getMovie(id = movieId)
     }
 
-    private fun getMovie(id: Int){
+    private fun getMovie(id: Int) {
         RetrofitService.getMovieApi()
             .getMovieById(id, RetrofitService.getApiKey()).enqueue(object :
-            Callback<JsonObject> {
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                progressBar.visibility = View.GONE
-            }
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                var gson = Gson()
-                Log.d("My_movie", response.body().toString())
-                if (response.isSuccessful) {
+                Callback<JsonObject> {
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
                     progressBar.visibility = View.GONE
-                    val movie: Movie = gson.fromJson(response.body(),
-                        Movie::class.java)
-                    if (movie != null) {
-                        tvDescription.text = movie.overview
-                        tvTitle.text = movie.title
-                        tvTitleMini.text = movie.title
-                        tvDate.text = "Date: "
-                        tvAdult.text = "Adult: "
-                        tvRating.text = "Rating: "
-                        tvPopularity.text = "Popularity: "
-                        tvTime.text = "Time: "
-                        tvFullHD.text = "Full HD"
-                        if (movie.isForAdult==true) {
-                            tvAge.text = "18+"
-                        }
-                        else
-                            tvAge.text = "0+"
+                }
 
-                        Glide.with(this@MovieDetailActivity)
-                            .load(R.drawable.ic_play_circle_filled_black_24dp)
-                            .into(playImg)
-                        Glide.with(this@MovieDetailActivity)
-                            .load(R.drawable.trailer)
-                            .into(trailerImg)
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                    var gson = Gson()
+                    Log.d("My_movie", response.body().toString())
+                    if (response.isSuccessful) {
+                        progressBar.visibility = View.GONE
+                        val movie: Movie = gson.fromJson(
+                            response.body(),
+                            Movie::class.java
+                        )
+                        if (movie != null) {
+                            tvDescription.text = movie.overview
+                            tvTitle.text = movie.title
+                            tvTitleMini.text = movie.title
+                            tvDate.text = "Date: "
+                            tvAdult.text = "Adult: "
+                            tvRating.text = "Rating: "
+                            tvPopularity.text = "Popularity: "
+                            tvTime.text = "Time: "
+                            tvFullHD.text = "Full HD"
+                            if (movie.isForAdult == true) {
+                                tvAge.text = "18+"
+                            } else
+                                tvAge.text = "0+"
 
-                        for (fm in CurrentUser.favoritList!!) {
-                            if (movie.title.equals(fm.title)) {
-                                isFavorite = true
-                            }
-                        }
-
-                        if (isFavorite) {
                             Glide.with(this@MovieDetailActivity)
-                                .load(R.drawable.favorites2)
-                                .into(favImg)
-                        }
-                        else {
+                                .load(R.drawable.ic_play_circle_filled_black_24dp)
+                                .into(playImg)
                             Glide.with(this@MovieDetailActivity)
-                                .load(R.drawable.favorites1)
-                                .into(favImg)
-                        }
+                                .load(R.drawable.trailer)
+                                .into(trailerImg)
 
-                        Glide.with(this@MovieDetailActivity)
-                            .load(R.drawable.download)
-                            .into(downloadImg)
-
-                        Glide.with(this@MovieDetailActivity)
-                            .load(R.drawable.share)
-                            .into(shareImg)
-                        tvDateContent.text = movie.date
-
-                        if (movie.isForAdult==false)
-                            tvAdultContent.text = "No"
-                        else
-                            tvAdultContent.text = "Yes"
-                        tvRatingContent.text = movie.rating.toString()
-                        tvPopularityContent.text = movie.popularity.toString()
-                        tvTimeContent.text = movie.runtime.toString() + " min"
-
-                        if (movie.imgPath != null) {
-                            Glide.with(this@MovieDetailActivity)
-                                .load(baseImageUrl + movie.imgPath)
-                                .into(imgMovie)
-                        }
-
-                        favImg.setOnClickListener(){
-                            if(isFavorite) {
-                                val body = JsonObject().apply {
-                                    addProperty("media_type", "movie")
-                                    addProperty("media_id", movie.movieId)
-                                    addProperty("favorite", false)
+                            for (fm in CurrentUser.favoritList!!) {
+                                if (movie.title.equals(fm.title)) {
+                                    isFavorite = true
                                 }
-
-                                Glide.with(this@MovieDetailActivity)
-                                    .load(R.drawable.favorites1)
-                                    .into(favImg)
-
-                                markFavorite(body)
                             }
-                            else {
-                                val body = JsonObject().apply {
-                                    addProperty("media_type", "movie")
-                                    addProperty("media_id", movie.movieId)
-                                    addProperty("favorite", true)
-                                }
 
+                            if (isFavorite) {
                                 Glide.with(this@MovieDetailActivity)
                                     .load(R.drawable.favorites2)
                                     .into(favImg)
+                            } else {
+                                Glide.with(this@MovieDetailActivity)
+                                    .load(R.drawable.favorites1)
+                                    .into(favImg)
+                            }
 
-                                markFavorite(body)
+                            Glide.with(this@MovieDetailActivity)
+                                .load(R.drawable.download)
+                                .into(downloadImg)
+
+                            Glide.with(this@MovieDetailActivity)
+                                .load(R.drawable.share)
+                                .into(shareImg)
+                            tvDateContent.text = movie.date
+
+                            if (movie.isForAdult == false)
+                                tvAdultContent.text = "No"
+                            else
+                                tvAdultContent.text = "Yes"
+                            tvRatingContent.text = movie.rating.toString()
+                            tvPopularityContent.text = movie.popularity.toString()
+                            tvTimeContent.text = movie.runtime.toString() + " min"
+
+                            if (movie.imgPath != null) {
+                                Glide.with(this@MovieDetailActivity)
+                                    .load(baseImageUrl + movie.imgPath)
+                                    .into(imgMovie)
+                            }
+
+                            favImg.setOnClickListener() {
+                                if (isFavorite) {
+                                    val body = JsonObject().apply {
+                                        addProperty("media_type", "movie")
+                                        addProperty("media_id", movie.movieId)
+                                        addProperty("favorite", false)
+                                    }
+
+                                    Glide.with(this@MovieDetailActivity)
+                                        .load(R.drawable.favorites1)
+                                        .into(favImg)
+
+                                    markFavorite(body)
+                                } else {
+                                    val body = JsonObject().apply {
+                                        addProperty("media_type", "movie")
+                                        addProperty("media_id", movie.movieId)
+                                        addProperty("favorite", true)
+                                    }
+
+                                    Glide.with(this@MovieDetailActivity)
+                                        .load(R.drawable.favorites2)
+                                        .into(favImg)
+
+                                    markFavorite(body)
+                                }
                             }
                         }
                     }
                 }
-            }
-        })
+            })
     }
 
-    fun markFavorite(body: JsonObject){
+    fun markFavorite(body: JsonObject) {
         var favResponse: FavoriteResponse?
         RetrofitService.getMovieApi().markAsFavorite(
-            CurrentUser.user!!.account_id,
-            RetrofitService.getApiKey(), CurrentUser.user!!.sessionId.toString(),body).enqueue(object :
+            CurrentUser.user?.account_id,
+            RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString(), body
+        ).enqueue(object :
             Callback<JsonObject> {
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                var gson:Gson = Gson()
+                var gson: Gson = Gson()
                 val type: Type = object : TypeToken<FavoriteResponse>() {}.type
-                favResponse= gson.fromJson(response.body(), FavoriteResponse::class.java)
-                if(favResponse!=null){
+                favResponse = gson.fromJson(response.body(), FavoriteResponse::class.java)
+                if (favResponse != null) {
                     notify(favResponse!!)
                 }
             }
         })
     }
 
-    private fun notify(favResponse: FavoriteResponse){
-        val status_code = favResponse!!.status_code
-        if(status_code==0){
+    private fun notify(favResponse: FavoriteResponse) {
+        val status_code = favResponse?.status_code
+        if (status_code == 0) {
             Toast.makeText(this, favResponse.toString(), Toast.LENGTH_SHORT).show()
         }
     }
