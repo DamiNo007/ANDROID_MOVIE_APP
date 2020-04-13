@@ -86,7 +86,20 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     //GETTING ACCOUNT USING COROUTINES
     fun getAccountCoroutines(session: String?) {
-
+        launch {
+            val response = RetrofitService.getMovieApi()
+                .getAccountCoroutines(RetrofitService.getApiKey(), session!!).await()
+            if (response.isSuccessful) {
+                progressBar.visibility = View.GONE
+                val accountResponse = response.body()
+                if (accountResponse != null) {
+                    welcome(accountResponse!!, session)
+                } else {
+                    CurrentUser.user = null
+                    login()
+                }
+            }
+        }
     }
 
     fun welcome(user: AccountResponse, session: String?) {
