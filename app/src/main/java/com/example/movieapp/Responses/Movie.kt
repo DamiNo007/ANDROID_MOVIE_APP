@@ -1,10 +1,14 @@
 package com.example.movieapp.Responses
 
 import android.text.method.MovementMethod
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 //MOVIEDEVELOP2BRANCH
+@Entity(tableName = "movie_table")
 data class Movie(
+    @PrimaryKey
     @SerializedName("id") val movieId: Int? = null,
     @SerializedName("title") val title: String? = null,
     @SerializedName("overview") val overview: String? = null,
@@ -15,7 +19,8 @@ data class Movie(
     @SerializedName("adult") val isForAdult: Boolean? = null,
     @SerializedName("runtime") val runtime: Float? = null,
     @SerializedName("genre_ids") val genreIds: List<Int>? = null,
-    @SerializedName("favorite") val favorite: Boolean? = null
+    var favorite: Int? = null,
+    var offlineFavorite: Int? = null
 )
 
 data class Story(
@@ -24,7 +29,9 @@ data class Story(
     val storyImgPath: Int? = null
 )
 
+@Entity(tableName = "genre_table")
 data class MovieGenres(
+    @PrimaryKey
     @SerializedName("id") val genreId: Int? = null,
     @SerializedName("name") val genreName: String? = null
 )

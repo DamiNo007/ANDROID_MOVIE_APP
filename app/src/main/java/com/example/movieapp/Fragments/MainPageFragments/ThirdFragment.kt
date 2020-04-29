@@ -40,7 +40,6 @@ class ThirdFragment : Fragment(), CoroutineScope {
     private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -88,5 +87,16 @@ class ThirdFragment : Fragment(), CoroutineScope {
         startActivity(intent)
         this.activity!!.overridePendingTransition(0, 0)
         ActivityCompat.finishAffinity(this.activity!!)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val currUserFavListSharedPreference: SharedPreferences =
+            this.activity!!.getSharedPreferences("CURRENT_USER_FAVORITE_LIST", Context.MODE_PRIVATE)
+        var currUserFavListEditor = currUserFavListSharedPreference.edit()
+        val gson = Gson()
+        val json: String = gson?.toJson(CurrentUser.favoritList)
+        currUserFavListEditor.putString("currentUserFavList", json)
+        currUserFavListEditor.commit()
     }
 }

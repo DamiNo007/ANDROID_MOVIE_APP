@@ -128,5 +128,12 @@ interface MovieApi {
 
     @GET("movie/{id}")
     fun getMovieByIdCoroutines(@Path("id") id: Int, @Query("api_key") apiKey: String?): Deferred<Response<Movie>>
+
+    @GET("movie/{movie_id}/account_states")
+    suspend fun getMovieStatus(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("session_id") sessionId: String
+    ): Response<MovieStatus>
 }
 

@@ -46,7 +46,6 @@ class FavoriteMovieAdapter(
                 .into(holder.imgMovie)
         }
 
-        var cnt: Int = 0
         holder.tvTitle.setText("Title: ")
         holder.tvGenre.setText("Genre: ")
         holder.tvDate.setText("Date: ")
@@ -72,16 +71,20 @@ class FavoriteMovieAdapter(
             }
 
             if (id != null) {
-                for (genre in genreList!!) {
-                    if (genre.genreId === id) {
-                        holder.tvGenreContent.text = genre.genreName
+                if (genreList != null) {
+                    for (genre in genreList!!) {
+                        if (genre.genreId === id) {
+                            holder.tvGenreContent.text = genre.genreName
+                        }
                     }
                 }
             }
         }
 
         holder.itemView.setOnClickListener {
-            itemClickListener?.itemClick(movie?.movieId!!, movie!!)
+            if (movie?.movieId != null) {
+                itemClickListener?.itemClick(movie?.movieId, movie)
+            }
         }
     }
 

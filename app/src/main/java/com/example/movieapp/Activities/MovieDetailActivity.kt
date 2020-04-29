@@ -11,13 +11,14 @@ import com.example.movieapp.R
 import com.example.movieapp.Responses.FavoriteResponse
 import com.example.movieapp.Responses.Movie
 import com.example.movieapp.API.RetrofitService
+import com.example.movieapp.DAO.MovieDAO
+import com.example.movieapp.DAO.StatusDAO
+import com.example.movieapp.DB.MovieDB
+import com.example.movieapp.Responses.MovieStatus
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,21 +45,26 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
     private lateinit var downloadImg: ImageButton
     private lateinit var shareImg: ImageButton
     private lateinit var favImg: ImageButton
+    private var isLiked: Boolean = false
     private lateinit var tvDateContent: TextView
     private lateinit var tvAdultContent: TextView
     private lateinit var tvRatingContent: TextView
     private lateinit var tvPopularityContent: TextView
     private lateinit var tvTimeContent: TextView
-    private var isFavorite = false
+    private var movieStatus: MovieStatus? = null
+    private var notConnected = false
     private val baseImageUrl: String = "https://image.tmdb.org/t/p/w500"
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
+    private var movieDao: MovieDAO? = null
+    private var statusDao: StatusDAO? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
-
+        movieDao = MovieDB.getDB(context = this).movieDao()
+        statusDao = MovieDB.getDB(context = this).statusDao()
         progressBar = findViewById(R.id.progressBar)
         tvDescription = findViewById(R.id.tvDescription)
         tvTitle = findViewById(R.id.tvTitle)
@@ -86,192 +92,104 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
         getMovieCoroutines(id = movieId)
     }
 
-    /*
-    //GETTING MOVIE WITHOUT COROUTINES
-    private fun getMovie(id: Int) {
-        RetrofitService.getMovieApi()
-            .getMovieById(id, RetrofitService.getApiKey()).enqueue(object :
-                Callback<JsonObject> {
-                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                    progressBar.visibility = View.GONE
-                }
-
-                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                    var gson = Gson()
-                    Log.d("My_movie", response.body().toString())
-                    if (response.isSuccessful) {
-                        progressBar.visibility = View.GONE
-                        val movie: Movie = gson.fromJson(
-                            response.body(),
-                            Movie::class.java
-                        )
-                        if (movie != null) {
-                            tvDescription.text = movie.overview
-                            tvTitle.text = movie.title
-                            tvTitleMini.text = movie.title
-                            tvDate.text = "Date: "
-                            tvAdult.text = "Adult: "
-                            tvRating.text = "Rating: "
-                            tvPopularity.text = "Popularity: "
-                            tvTime.text = "Time: "
-                            tvFullHD.text = "Full HD"
-                            if (movie.isForAdult == true) {
-                                tvAge.text = "18+"
-                            } else
-                                tvAge.text = "0+"
-
-                            Glide.with(this@MovieDetailActivity)
-                                .load(R.drawable.ic_play_circle_filled_black_24dp)
-                                .into(playImg)
-                            Glide.with(this@MovieDetailActivity)
-                                .load(R.drawable.trailer)
-                                .into(trailerImg)
-
-                            for (fm in CurrentUser.favoritList!!) {
-                                if (movie.title.equals(fm.title)) {
-                                    isFavorite = true
-                                }
-                            }
-
-                            if (isFavorite) {
-                                Glide.with(this@MovieDetailActivity)
-                                    .load(R.drawable.favorites2)
-                                    .into(favImg)
-                            } else {
-                                Glide.with(this@MovieDetailActivity)
-                                    .load(R.drawable.favorites1)
-                                    .into(favImg)
-                            }
-
-                            Glide.with(this@MovieDetailActivity)
-                                .load(R.drawable.download)
-                                .into(downloadImg)
-
-                            Glide.with(this@MovieDetailActivity)
-                                .load(R.drawable.share)
-                                .into(shareImg)
-                            tvDateContent.text = movie.date
-
-                            if (movie.isForAdult == false)
-                                tvAdultContent.text = "No"
-                            else
-                                tvAdultContent.text = "Yes"
-                            tvRatingContent.text = movie.rating.toString()
-                            tvPopularityContent.text = movie.popularity.toString()
-                            tvTimeContent.text = movie.runtime.toString() + " min"
-
-                            if (movie.imgPath != null) {
-                                Glide.with(this@MovieDetailActivity)
-                                    .load(baseImageUrl + movie.imgPath)
-                                    .into(imgMovie)
-                            }
-
-                            favImg.setOnClickListener() {
-                                if (isFavorite) {
-                                    val body = JsonObject().apply {
-                                        addProperty("media_type", "movie")
-                                        addProperty("media_id", movie.movieId)
-                                        addProperty("favorite", false)
-                                    }
-
-                                    Glide.with(this@MovieDetailActivity)
-                                        .load(R.drawable.favorites1)
-                                        .into(favImg)
-
-                                    markFavorite(body)
-                                } else {
-                                    val body = JsonObject().apply {
-                                        addProperty("media_type", "movie")
-                                        addProperty("media_id", movie.movieId)
-                                        addProperty("favorite", true)
-                                    }
-
-                                    Glide.with(this@MovieDetailActivity)
-                                        .load(R.drawable.favorites2)
-                                        .into(favImg)
-
-                                    markFavorite(body)
-                                }
-                            }
-                        }
-                    }
-                }
-            })
+    override fun onResume() {
+        super.onResume()
+        isLiked = false
+        val movieId = intent.getIntExtra("movie_id", 1)
+        getMovieCoroutines(id = movieId)
     }
-     */
 
     //GETTING MOVIE USING COROUTINES
     private fun getMovieCoroutines(id: Int) {
         launch {
-            val response = RetrofitService.getMovieApi()
-                .getMovieByIdCoroutines(id, RetrofitService.getApiKey()).await()
-            if (response.isSuccessful) {
-                progressBar.visibility = View.GONE
-                val movie: Movie? = response.body()
-                if (movie != null) {
-                    tvDescription.text = movie.overview
-                    tvTitle.text = movie.title
-                    tvTitleMini.text = movie.title
-                    tvDate.text = "Date: "
-                    tvAdult.text = "Adult: "
-                    tvRating.text = "Rating: "
-                    tvPopularity.text = "Popularity: "
-                    tvTime.text = "Time: "
-                    tvFullHD.text = "Full HD"
-                    if (movie.isForAdult == true) {
-                        tvAge.text = "18+"
-                    } else
-                        tvAge.text = "0+"
+            val movie = withContext(Dispatchers.IO) {
+                try {
+                    val response = RetrofitService.getMovieApi()
+                        .getMovieByIdCoroutines(id, RetrofitService.getApiKey()).await()
 
-                    Glide.with(this@MovieDetailActivity)
-                        .load(R.drawable.ic_play_circle_filled_black_24dp)
-                        .into(playImg)
-                    Glide.with(this@MovieDetailActivity)
-                        .load(R.drawable.trailer)
-                        .into(trailerImg)
+                    if (response.isSuccessful) {
+                        response.body()
+                    } else {
+                        notConnected = true
+                        movieDao?.getMovie(id) ?: null
+                    }
+                } catch (e: Exception) {
+                    notConnected = true
+                    movieDao?.getMovie(id) ?: null
+                }
+            }
 
-                    for (fm in CurrentUser.favoritList!!) {
-                        if (movie.title.equals(fm.title)) {
-                            isFavorite = true
+            progressBar.visibility = View.GONE
+            if (movie != null) {
+                if (CurrentUser.favoritList != null) {
+                    for (m in CurrentUser.favoritList!!) {
+                        if (movie.movieId == m.movieId) {
+                            isLiked = true
                         }
                     }
+                }
 
-                    if (isFavorite) {
-                        Glide.with(this@MovieDetailActivity)
-                            .load(R.drawable.favorites2)
-                            .into(favImg)
-                    } else {
-                        Glide.with(this@MovieDetailActivity)
-                            .load(R.drawable.favorites1)
-                            .into(favImg)
-                    }
-
+                if (isLiked) {
                     Glide.with(this@MovieDetailActivity)
-                        .load(R.drawable.download)
-                        .into(downloadImg)
-
+                        .load(R.drawable.favorites2)
+                        .into(favImg)
+                } else {
                     Glide.with(this@MovieDetailActivity)
-                        .load(R.drawable.share)
-                        .into(shareImg)
-                    tvDateContent.text = movie.date
-                    if (movie.isForAdult == false)
-                        tvAdultContent.text = "No"
-                    else
-                        tvAdultContent.text = "Yes"
-                    tvRatingContent.text = movie.rating.toString()
-                    tvPopularityContent.text = movie.popularity.toString()
-                    tvTimeContent.text = movie.runtime.toString() + " min"
+                        .load(R.drawable.favorites1)
+                        .into(favImg)
+                }
 
+                tvDescription.text = movie.overview
+                tvTitle.text = movie.title
+                tvTitleMini.text = movie.title
+                tvDate.text = "Date: "
+                tvAdult.text = "Adult: "
+                tvRating.text = "Rating: "
+                tvPopularity.text = "Popularity: "
+                tvTime.text = "Time: "
+                tvFullHD.text = "Full HD"
+                if (movie.isForAdult == true) {
+                    tvAge.text = "18+"
+                } else
+                    tvAge.text = "0+"
 
-                    if (movie.imgPath != null) {
-                        Glide.with(this@MovieDetailActivity)
-                            .load(baseImageUrl + movie.imgPath)
-                            .into(imgMovie)
+                Glide.with(this@MovieDetailActivity)
+                    .load(R.drawable.ic_play_circle_filled_black_24dp)
+                    .into(playImg)
+                Glide.with(this@MovieDetailActivity)
+                    .load(R.drawable.trailer)
+                    .into(trailerImg)
 
-                    }
+                Glide.with(this@MovieDetailActivity)
+                    .load(R.drawable.download)
+                    .into(downloadImg)
 
-                    favImg.setOnClickListener() {
-                        if (isFavorite) {
+                Glide.with(this@MovieDetailActivity)
+                    .load(R.drawable.share)
+                    .into(shareImg)
+                tvDateContent.text = movie.date
+                if (movie.isForAdult == false)
+                    tvAdultContent.text = "No"
+                else
+                    tvAdultContent.text = "Yes"
+                tvRatingContent.text = movie.rating.toString()
+                tvPopularityContent.text = movie.popularity.toString()
+                tvTimeContent.text = movie.runtime.toString() + " min"
+
+                if (movie.imgPath != null) {
+                    Glide.with(this@MovieDetailActivity)
+                        .load(baseImageUrl + movie.imgPath)
+                        .into(imgMovie)
+                }
+
+                favImg.setOnClickListener() {
+                    if (isLiked) {
+                        if (notConnected) {
+                            Glide.with(this@MovieDetailActivity)
+                                .load(R.drawable.favorites1)
+                                .into(favImg)
+                            notifyEv(movie, false)
+                        } else {
                             val body = JsonObject().apply {
                                 addProperty("media_type", "movie")
                                 addProperty("media_id", movie.movieId)
@@ -281,76 +199,92 @@ class MovieDetailActivity : AppCompatActivity(), CoroutineScope {
                             Glide.with(this@MovieDetailActivity)
                                 .load(R.drawable.favorites1)
                                 .into(favImg)
+                            try {
+                                movieDao?.updateMovie(movie)
+                            } catch (e: Exception) {
+                                Log.d("ERROR", e.toString())
+                            }
+                            markFavoriteCoroutines(body, movie, false)
+                        }
+                        isLiked = false
 
-                            markFavoriteCoroutines(body)
+                    } else {
+                        if (notConnected) {
+                            Glide.with(this@MovieDetailActivity)
+                                .load(R.drawable.favorites2)
+                                .into(favImg)
+                            notifyEv(movie, true)
                         } else {
                             val body = JsonObject().apply {
                                 addProperty("media_type", "movie")
                                 addProperty("media_id", movie.movieId)
                                 addProperty("favorite", true)
                             }
-
                             Glide.with(this@MovieDetailActivity)
                                 .load(R.drawable.favorites2)
                                 .into(favImg)
 
-                            markFavoriteCoroutines(body)
+                            try {
+                                movieDao?.updateMovie(movie)
+                            } catch (e: Exception) {
+                                Log.d("ERROR", e.toString())
+                            }
+                            markFavoriteCoroutines(body, movie, true)
+                            isLiked = true
                         }
-
+                        isLiked = true
                     }
                 }
             }
         }
-
     }
 
-    /*
-    //MARKING AS FAVORITE WITHOUT COROUTINES
-    fun markFavorite(body: JsonObject) {
-        var favResponse: FavoriteResponse?
-        RetrofitService.getMovieApi().markAsFavorite(
-            CurrentUser.user?.accountId,
-            RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString(), body
-        ).enqueue(object :
-            Callback<JsonObject> {
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                var gson: Gson = Gson()
-                val type: Type = object : TypeToken<FavoriteResponse>() {}.type
-                favResponse = gson.fromJson(response.body(), FavoriteResponse::class.java)
-                if (favResponse != null) {
-                    notify(favResponse!!)
+    fun notifyEv(movie: Movie, liked: Boolean) {
+        Toast.makeText(
+            this,
+            "You are offline! Your actions will be processed after you are back online!",
+            Toast.LENGTH_SHORT
+        )
+            .show()
+        if (liked) {
+            if (!CurrentUser.offlineDislikedMovieList.isNullOrEmpty()) {
+                if (CurrentUser.offlineDislikedMovieList!!.contains(movie)) {
+                    CurrentUser.offlineDislikedMovieList?.remove(movie)
                 }
             }
-        })
-    }
-     */
-
-    //MARKING AS FAVORITE USING COROUTINES
-    fun markFavoriteCoroutines(body: JsonObject) {
-        launch {
-            val response = RetrofitService.getMovieApi().markAsFavoriteCoroutines(
-                CurrentUser.user?.accountId,
-                RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString(), body
-            ).await()
-
-            if (response.isSuccessful) {
-                val favResponse = response.body()
-                if (favResponse != null) {
-                    notify(favResponse!!)
+            CurrentUser.offlineLikedMovieList?.add(movie)
+            CurrentUser.favoritList?.add(movie)
+        } else {
+            if (!CurrentUser.offlineLikedMovieList.isNullOrEmpty()) {
+                if (CurrentUser.offlineLikedMovieList!!.contains(movie)) {
+                    CurrentUser.offlineLikedMovieList?.remove(movie)
                 }
             }
-
+            CurrentUser.offlineDislikedMovieList?.add(movie)
+            CurrentUser.favoritList?.remove(movie)
         }
     }
 
-    private fun notify(favResponse: FavoriteResponse) {
-        val statusCode = favResponse?.statusСode
-        if (statusCode == 0) {
-            Toast.makeText(this, favResponse.toString(), Toast.LENGTH_SHORT).show()
+    //MARKING AS FAVORITE USING COROUTINES
+    fun markFavoriteCoroutines(body: JsonObject, movie: Movie, liked: Boolean) {
+        launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val response = RetrofitService.getMovieApi().markAsFavoriteCoroutines(
+                        CurrentUser.user?.accountId,
+                        RetrofitService.getApiKey(), CurrentUser.user?.sessionId.toString(), body
+                    ).await()
+                    if (!response.isSuccessful) {
+                        notConnected = true
+                    } else {
+                        Log.d("COOL", response.toString())
+                    }
+                } catch (e: Exception) {
+                    notConnected = true
+                    Log.d("ERROR", e.toString())
+                }
+            }
+
         }
     }
 }

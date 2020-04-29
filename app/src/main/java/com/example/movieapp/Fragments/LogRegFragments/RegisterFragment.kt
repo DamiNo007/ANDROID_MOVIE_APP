@@ -75,31 +75,6 @@ class RegisterFragment : Fragment(), CoroutineScope {
         return view
     }
 
-    /*
-    //GETTING TOKEN WITHOUT COROUTINES
-    fun getNewToken() {
-        RetrofitService.getMovieApi()
-            .getNewToken(RetrofitService.getApiKey()).enqueue(object :
-                Callback<JsonObject> {
-                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                    Log.d("My_token_failure", t.toString())
-                }
-
-                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                    var gson = Gson()
-                    Log.d("My_token_response", response.body().toString())
-                    if (response.isSuccessful) {
-                        val token = gson.fromJson(response.body(), Token::class.java)
-
-                        if (token != null) {
-                            createNewUser(token)
-                        }
-                    }
-                }
-            })
-    }
-     */
-
     //GETTING TOKEN USING COROUTINES
     fun getNewTokenCoroutines() {
         launch {
